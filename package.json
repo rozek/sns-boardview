@@ -1,0 +1,47 @@
+{
+  "name": "sns-boardview",
+  "version": "0.0.1",
+  "description": "a \"preact\" editor component for \"shareable-note-stickers\"",
+  "type": "module",
+  "source": "src/SNS_BoardView.ts",
+  "exports": {
+    "types": "./dist/SNS_BoardView.d.ts",
+    "require": "./dist/SNS_BoardView.cjs",
+    "default": "./dist/SNS_BoardView.modern.js"
+  },
+  "main": "./dist/SNS_BoardView.cjs",
+  "module": "./dist/SNS_BoardView.esm.js",
+  "svelte": "./dist/SNS_BoardView.esm.js",
+  "umd:main": "./dist/SNS_BoardView.umd.js",
+  "types": "./dist/SNS_BoardView.d.ts",
+  "keywords": [
+    "crdt"
+  ],
+  "author": "Andreas Rozek <a.rozek@gmx.de> (https://www.rozek.de/)",
+  "license": "MIT",
+  "homepage": "https://github.com/rozek/sns-boardview#readme",
+  "bugs": {
+    "url": "https://github.com/rozek/sns-boardview/issues"
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc && vite build --sourcemap true --assetsDir .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rozek/sns-boardview.git"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.6"
+  },
+  "dependencies": {
+    "htm": "^3.1.1",
+    "javascript-interface-library": "^1.0.6",
+    "preact": "^10.22.0",
+    "protoux": "^0.0.24",
+    "shareable-note-stickers": "^0.0.3",
+    "svelte-coordinate-conversion": "^1.0.2"
+  }
+}
