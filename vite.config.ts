@@ -10,6 +10,7 @@ export default defineConfig({
   	},
   	minify: true,
   	rollupOptions: {
+  		external: ['javascript-interface-library','htm','preact','protoux','shareable-note-stickers','svelte-coordinate-conversion'],
       output: {
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,
