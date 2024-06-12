@@ -1,16 +1,20 @@
-var De = Object.defineProperty;
-var Pe = (E, $, d) => $ in E ? De(E, $, { enumerable: !0, configurable: !0, writable: !0, value: d }) : E[$] = d;
-var S = (E, $, d) => (Pe(E, typeof $ != "symbol" ? $ + "" : $, d), d);
-import { allowTextline as te, allowListSatisfying as ce, allowOneOf as he, allowOrdinal as ne, allowFunction as A, allowText as He, allowBoolean as Be, allowCardinal as ue, allowInteger as Se } from "javascript-interface-library";
-import { allowBoard as We, ValueIsSticker as oe, CSSStyleOfVisual as _e } from "shareable-note-stickers";
-import Ve from "svelte-coordinate-conversion";
-import { h as ze, Component as j } from "preact";
-import Fe from "htm";
-import { DragClickRecognizerFor as pe, DragRecognizerFor as fe } from "protoux";
-var _ = Fe.bind(ze);
-const { fromDocumentTo: Te } = Ve, ie = document.createElement("style");
-ie.setAttribute("id", "SNS Stylesheet");
-ie.innerHTML = `/*******************************************************************************
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+import { allowTextline, allowListSatisfying, allowOneOf, allowOrdinal, allowFunction, allowText, allowBoolean, allowCardinal, allowInteger } from "javascript-interface-library";
+import { allowBoard, ValueIsSticker, CSSStyleOfVisual } from "shareable-note-stickers";
+import Conversion from "svelte-coordinate-conversion";
+import { h, Component } from "preact";
+import e from "htm";
+import { DragClickRecognizerFor, DragRecognizerFor } from "protoux";
+var m = e.bind(h);
+const { fromDocumentTo } = Conversion;
+const Stylesheet = document.createElement("style");
+Stylesheet.setAttribute("id", "SNS Stylesheet");
+Stylesheet.innerHTML = `/*******************************************************************************
 *                                                                              *
 *                        Shareable Note Stickers (SNS)                         *
 *                                                                              *
@@ -103,38 +107,49 @@ ie.innerHTML = `/***************************************************************
   }
 
 `;
-document.head.appendChild(ie);
-class Re extends j {
+document.head.appendChild(Stylesheet);
+class SNS_BoardView extends Component {
   constructor() {
     super(...arguments);
-    S(this, "_Board");
-    S(this, "_StickerList", []);
-    S(this, "_pointedSticker");
-    S(this, "_selectedStickers", []);
+    __publicField(this, "_Board");
+    __publicField(this, "_StickerList", []);
+    __publicField(this, "_pointedSticker");
+    __publicField(this, "_selectedStickers", []);
     // for dragging & shaping
-    S(this, "_SelectionLimit", 1 / 0);
-    S(this, "_LassoStart");
-    S(this, "_LassoEnd");
-    S(this, "_SelectionBeforeLasso", []);
-    S(this, "_ShapeMode");
-    S(this, "_shapedStickers");
-    S(this, "_initialGeometries");
-    S(this, "_SnapToGrid", !1);
-    S(this, "_GridWidth", 1);
-    S(this, "_GridHeight", 1);
-    S(this, "_StickerRecognizerSlot", {});
-    S(this, "_ShapeHandleRecognizerSlot", {});
-    S(this, "_LassoRecognizerSlot", {});
-    S(this, "state", { Value: 0 });
+    __publicField(this, "_SelectionLimit", Infinity);
+    __publicField(this, "_LassoStart");
+    __publicField(this, "_LassoEnd");
+    __publicField(this, "_SelectionBeforeLasso", []);
+    __publicField(this, "_ShapeMode");
+    __publicField(this, "_shapedStickers");
+    __publicField(this, "_initialGeometries");
+    __publicField(this, "_SnapToGrid", false);
+    __publicField(this, "_GridWidth", 1);
+    __publicField(this, "_GridHeight", 1);
+    __publicField(this, "_StickerRecognizerSlot", {});
+    __publicField(this, "_ShapeHandleRecognizerSlot", {});
+    __publicField(this, "_LassoRecognizerSlot", {});
+    __publicField(this, "state", { Value: 0 });
   }
   /**** _mountBoard ****/
-  _mountBoard(d) {
-    d != null && this.base != null && (d._View = this.base, d._onMount != null && d._onMount()), this._Board = d;
+  _mountBoard(Board) {
+    if (Board != null && this.base != null) {
+      Board["_View"] = this.base;
+      if (Board["_onMount"] != null) {
+        Board["_onMount"]();
+      }
+    }
+    this._Board = Board;
   }
   /**** _unmountBoard ****/
   _unmountBoard() {
-    const d = this._Board;
-    d != null && (d._View = void 0, d._onUnmount != null && d._onUnmount());
+    const Board = this._Board;
+    if (Board != null) {
+      Board["_View"] = void 0;
+      if (Board["_onUnmount"] != null) {
+        Board["_onUnmount"]();
+      }
+    }
   }
   /**** componentDidMount/WillUnmount ****/
   componentDidMount() {
@@ -148,466 +163,778 @@ class Re extends j {
     this.setState({ Value: this.state.Value + 1 });
   }
   /**** render ****/
-  render(d) {
-    const e = this;
+  render(PropSet) {
+    const my = this;
     let {
-      Classes: m,
-      Board: x,
-      StickerList: g,
-      Placeholder: w,
-      Mode: k,
-      SelectionLimit: p,
-      selectedStickers: c,
-      onSelectionChange: v,
-      onStickerSelected: b,
-      onStickerDeselected: M,
-      SelectionFrameStyle: R,
-      SelectionHandleStyle: z,
-      LassoMode: y,
-      onGeometryChange: f,
-      SnapToGrid: I,
-      GridWidth: O,
-      GridHeight: U
-    } = d;
-    this._Board !== x && (this._unmountBoard(), this._mountBoard(x));
-    function Z() {
-      e._pointedSticker = void 0, e._shapedStickers = void 0, e._initialGeometries = void 0;
+      Classes,
+      Board,
+      StickerList,
+      Placeholder,
+      Mode,
+      SelectionLimit,
+      selectedStickers,
+      onSelectionChange,
+      onStickerSelected,
+      onStickerDeselected,
+      SelectionFrameStyle,
+      SelectionHandleStyle,
+      LassoMode,
+      onGeometryChange,
+      SnapToGrid,
+      GridWidth,
+      GridHeight
+    } = PropSet;
+    if (this._Board !== Board) {
+      this._unmountBoard();
+      this._mountBoard(Board);
     }
-    function K() {
-      e._shapedStickers != null && J(e._shapedStickers, e._initialGeometries), Z();
+    function finishDraggingAndShaping() {
+      my._pointedSticker = void 0;
+      my._shapedStickers = void 0;
+      my._initialGeometries = void 0;
     }
-    te("board CSS class names", m), We("board", x), ce("sticker list", g, oe), te("placeholder text", w), he("board mode", k, ["edit", "run"]), ne("selection limit", p), ce("list of selected stickers", c, oe), A("selection change callback", v), A("selection callback", b), A("deselection callback", M), te("selection frame CSS style", R), He("selection handle CSS style", z), he("lasso selection mode", y, ["touch", "contain"]), A("geometry change callback", f), Be('"SnapToGrid" mode', I), ue("grid width", O), ue("grid height", U), m == null && (m = ""), w == null && (w = "(empty)"), k == null && (k = "run"), p == null && (p = 1 / 0), c == null && (c = []), z == null && (z = "background:orangered; border:solid 1px darkgray"), y == null && (y = "contain"), I == null && (I = !1), O == null && (O = 10), U == null && (U = 10);
-    const re = /* @__PURE__ */ new Set();
-    c = c.filter((t) => oe(t) && !re.has(t) ? (re.add(t), !0) : (K(), !1)), c.length > p && F(c.slice(0, p)), e._StickerList = g, e._selectedStickers = c, e._SelectionLimit = p, e._SnapToGrid = I, e._GridWidth = O, e._GridHeight = U;
-    function F(t, i = []) {
-      const o = t.slice();
-      i.forEach((s) => {
-        o.indexOf(s) < 0 && o.push(s);
-      }), c.length > e._SelectionLimit && (o.length = e._SelectionLimit);
-      const n = [], r = [];
-      o.forEach((s) => {
-        e._selectedStickers.indexOf(s) < 0 && n.push(s);
-      }), e._selectedStickers.forEach((s) => {
-        o.indexOf(s) < 0 && r.push(s);
-      }), c = e._selectedStickers = o, (n.length > 0 || r.length > 0) && (K(), v != null && v(c)), r.length > 0 && M != null && r.forEach((s) => {
-        M(s);
-      }), n.length > 0 && b != null && n.forEach((s) => {
-        b(s);
+    function abortDraggingAndShaping() {
+      if (my._shapedStickers != null) {
+        changeGeometriesTo(my._shapedStickers, my._initialGeometries);
+      }
+      finishDraggingAndShaping();
+    }
+    allowTextline("board CSS class names", Classes);
+    allowBoard("board", Board);
+    allowListSatisfying("sticker list", StickerList, ValueIsSticker);
+    allowTextline("placeholder text", Placeholder);
+    allowOneOf("board mode", Mode, ["edit", "run"]);
+    allowOrdinal("selection limit", SelectionLimit);
+    allowListSatisfying("list of selected stickers", selectedStickers, ValueIsSticker);
+    allowFunction("selection change callback", onSelectionChange);
+    allowFunction("selection callback", onStickerSelected);
+    allowFunction("deselection callback", onStickerDeselected);
+    allowTextline("selection frame CSS style", SelectionFrameStyle);
+    allowText("selection handle CSS style", SelectionHandleStyle);
+    allowOneOf("lasso selection mode", LassoMode, ["touch", "contain"]);
+    allowFunction("geometry change callback", onGeometryChange);
+    allowBoolean('"SnapToGrid" mode', SnapToGrid);
+    allowCardinal("grid width", GridWidth);
+    allowCardinal("grid height", GridHeight);
+    if (Classes == null) {
+      Classes = "";
+    }
+    if (Placeholder == null) {
+      Placeholder = "(empty)";
+    }
+    if (Mode == null) {
+      Mode = "run";
+    }
+    if (SelectionLimit == null) {
+      SelectionLimit = Infinity;
+    }
+    if (selectedStickers == null) {
+      selectedStickers = [];
+    }
+    if (SelectionHandleStyle == null) {
+      SelectionHandleStyle = "background:orangered; border:solid 1px darkgray";
+    }
+    if (LassoMode == null) {
+      LassoMode = "contain";
+    }
+    if (SnapToGrid == null) {
+      SnapToGrid = false;
+    }
+    if (GridWidth == null) {
+      GridWidth = 10;
+    }
+    if (GridHeight == null) {
+      GridHeight = 10;
+    }
+    const selectedStickerSet = /* @__PURE__ */ new Set();
+    selectedStickers = selectedStickers.filter((selectedSticker) => {
+      if (ValueIsSticker(selectedSticker) && !selectedStickerSet.has(selectedSticker)) {
+        selectedStickerSet.add(selectedSticker);
+        return true;
+      } else {
+        abortDraggingAndShaping();
+        return false;
+      }
+    });
+    if (selectedStickers.length > SelectionLimit) {
+      selectStickers(selectedStickers.slice(0, SelectionLimit));
+    }
+    my._StickerList = StickerList;
+    my._selectedStickers = selectedStickers;
+    my._SelectionLimit = SelectionLimit;
+    my._SnapToGrid = SnapToGrid;
+    my._GridWidth = GridWidth;
+    my._GridHeight = GridHeight;
+    function selectStickers(SelectionA, SelectionB = []) {
+      const newSelection = SelectionA.slice();
+      SelectionB.forEach((Sticker) => {
+        if (newSelection.indexOf(Sticker) < 0) {
+          newSelection.push(Sticker);
+        }
       });
-    }
-    function T(t) {
-      return c.indexOf(t) >= 0;
-    }
-    function se() {
-      const { x: t, y: i } = e._LassoStart, { x: o, y: n } = e._LassoEnd || e._LassoStart;
-      let r = t <= o ? t : o, s = t <= o ? o - t : t - o, l = i <= n ? i : n, a = i <= n ? n - i : i - n;
-      return { x: r, y: l, Width: s, Height: a };
-    }
-    function me() {
-      const { x: t, y: i, Width: o, Height: n } = se();
-      return `left:${t}px; top:${i}px; width:${o}px; height:${n}px`;
-    }
-    function xe() {
-      let { x: t, y: i, Width: o, Height: n } = se(), r = t + o, s = i + n;
-      return y === "touch" ? e._StickerList.filter((l) => {
-        if (!l.isVisible || l.isLocked)
-          return !1;
-        const { x: a, y: h, Width: u, Height: W } = l.Geometry;
-        return t <= a + u && a <= r && i <= h + W && h <= s;
-      }) : e._StickerList.filter((l) => {
-        if (!l.isVisible || l.isLocked)
-          return !1;
-        const { x: a, y: h, Width: u, Height: W } = l.Geometry;
-        return t <= a && a <= r + u && i <= h && h <= s + W;
+      if (selectedStickers.length > my._SelectionLimit) {
+        newSelection.length = my._SelectionLimit;
+      }
+      const StickersToSelect = [];
+      const StickersToDeselect = [];
+      newSelection.forEach((Sticker) => {
+        if (my._selectedStickers.indexOf(Sticker) < 0) {
+          StickersToSelect.push(Sticker);
+        }
       });
+      my._selectedStickers.forEach((Sticker) => {
+        if (newSelection.indexOf(Sticker) < 0) {
+          StickersToDeselect.push(Sticker);
+        }
+      });
+      selectedStickers = my._selectedStickers = newSelection;
+      if (StickersToSelect.length > 0 || StickersToDeselect.length > 0) {
+        abortDraggingAndShaping();
+        if (onSelectionChange != null) {
+          onSelectionChange(selectedStickers);
+        }
+      }
+      if (StickersToDeselect.length > 0 && onStickerDeselected != null) {
+        StickersToDeselect.forEach((deselectedSticker) => {
+          onStickerDeselected(deselectedSticker);
+        });
+      }
+      if (StickersToSelect.length > 0 && onStickerSelected != null) {
+        StickersToSelect.forEach((selectedSticker) => {
+          onStickerSelected(selectedSticker);
+        });
+      }
     }
-    function q(t, i) {
-      e._LassoEnd = { x: t, y: i }, F(e._SelectionBeforeLasso, xe());
+    function StickerIsSelected(Sticker) {
+      return selectedStickers.indexOf(Sticker) >= 0;
     }
-    function ye() {
-      e._LassoStart = e._LassoEnd = void 0, e._SelectionBeforeLasso = [];
+    function GeometryOfLasso() {
+      const { x: x0, y: y0 } = my._LassoStart;
+      const { x: x1, y: y1 } = my._LassoEnd || my._LassoStart;
+      let LassoX = x0 <= x1 ? x0 : x1;
+      let LassoWidth = x0 <= x1 ? x1 - x0 : x0 - x1;
+      let LassoY = y0 <= y1 ? y0 : y1;
+      let LassoHeight = y0 <= y1 ? y1 - y0 : y0 - y1;
+      return { x: LassoX, y: LassoY, Width: LassoWidth, Height: LassoHeight };
     }
-    function $e() {
-      e._LassoStart = e._LassoEnd = void 0, F(e._SelectionBeforeLasso), e._SelectionBeforeLasso = [];
+    function CSSGeometryOfLasso() {
+      const { x, y, Width, Height } = GeometryOfLasso();
+      return `left:${x}px; top:${y}px; width:${Width}px; height:${Height}px`;
     }
-    function ke() {
-      F([]);
+    function StickersCaughtByLasso() {
+      let { x: LassoX0, y: LassoY0, Width: LassoWidth, Height: LassoHeight } = GeometryOfLasso();
+      let LassoX1 = LassoX0 + LassoWidth;
+      let LassoY1 = LassoY0 + LassoHeight;
+      if (LassoMode === "touch") {
+        return my._StickerList.filter((Sticker) => {
+          if (!Sticker.isVisible || Sticker.isLocked) {
+            return false;
+          }
+          const { x, y, Width, Height } = Sticker.Geometry;
+          return LassoX0 <= x + Width && x <= LassoX1 && LassoY0 <= y + Height && y <= LassoY1;
+        });
+      } else {
+        return my._StickerList.filter((Sticker) => {
+          if (!Sticker.isVisible || Sticker.isLocked) {
+            return false;
+          }
+          const { x, y, Width, Height } = Sticker.Geometry;
+          return LassoX0 <= x && x <= LassoX1 + Width && LassoY0 <= y && y <= LassoY1 + Height;
+        });
+      }
     }
-    const H = pe(e._LassoRecognizerSlot, {
+    function dragLassoTo(x, y) {
+      my._LassoEnd = { x, y };
+      selectStickers(my._SelectionBeforeLasso, StickersCaughtByLasso());
+    }
+    function applyLasso() {
+      my._LassoStart = my._LassoEnd = void 0;
+      my._SelectionBeforeLasso = [];
+    }
+    function abortLasso() {
+      my._LassoStart = my._LassoEnd = void 0;
+      selectStickers(my._SelectionBeforeLasso);
+      my._SelectionBeforeLasso = [];
+    }
+    function onBoardClick() {
+      selectStickers([]);
+    }
+    const LassoRecognizer = DragClickRecognizerFor(my._LassoRecognizerSlot, {
       onlyFrom: ".SNS.BoardView",
       Threshold: 4,
-      onDragStarted: (t, i, o, n) => {
-        e._SelectionBeforeLasso = c.slice(), { left: t, top: i } = Te("local", { left: t, top: i }, e.base), e._LassoStart = { x: t, y: i }, q(t, i), e.rerender();
+      onDragStarted: (x, y, dx, dy) => {
+        my._SelectionBeforeLasso = selectedStickers.slice();
+        ({ left: x, top: y } = fromDocumentTo("local", { left: x, top: y }, my.base));
+        my._LassoStart = { x, y };
+        dragLassoTo(x, y);
+        my.rerender();
       },
-      onDragContinued: (t, i, o, n) => {
-        q(e._LassoStart.x + o, e._LassoStart.y + n), e.rerender();
+      onDragContinued: (x, y, dx, dy) => {
+        dragLassoTo(my._LassoStart.x + dx, my._LassoStart.y + dy);
+        my.rerender();
       },
-      onDragFinished: (t, i, o, n) => {
-        q(e._LassoStart.x + o, e._LassoStart.y + n), ye(), e.rerender();
+      onDragFinished: (x, y, dx, dy) => {
+        dragLassoTo(my._LassoStart.x + dx, my._LassoStart.y + dy);
+        applyLasso();
+        my.rerender();
       },
-      onDragCancelled: (t, i, o, n) => {
-        $e(), e.rerender();
+      onDragCancelled: (x, y, dx, dy) => {
+        abortLasso();
+        my.rerender();
       },
-      onClicked: ke
+      onClicked: onBoardClick
     });
-    function J(t, i) {
-      f != null && (f(t, i), e.rerender());
+    function changeGeometriesTo(StickerList2, GeometryList) {
+      if (onGeometryChange != null) {
+        onGeometryChange(StickerList2, GeometryList);
+        my.rerender();
+      }
     }
-    function N(t, i, o, n, r) {
-      if (f == null)
+    function changeGeometriesBy(StickerList2, Mode2, dx, dy, initialGeometries) {
+      if (onGeometryChange == null) {
         return;
-      let s = 0, l = 0, a = 0, h = 0;
-      switch (i) {
+      }
+      let dX = 0, dY = 0, dW = 0, dH = 0;
+      switch (Mode2) {
         case "nw":
-          s = o, a = -o, l = n, h = -n;
+          dX = dx;
+          dW = -dx;
+          dY = dy;
+          dH = -dy;
           break;
         case "n":
-          l = n, h = -n;
+          dY = dy;
+          dH = -dy;
           break;
         case "ne":
-          a = o, l = n, h = -n;
+          dW = dx;
+          dY = dy;
+          dH = -dy;
           break;
         case "e":
-          a = o;
+          dW = dx;
           break;
         case "se":
-          a = o, h = n;
+          dW = dx;
+          dH = dy;
           break;
         case "s":
-          h = n;
+          dH = dy;
           break;
         case "sw":
-          s = o, a = -o, h = n;
+          dX = dx;
+          dW = -dx;
+          dH = dy;
           break;
         case "w":
-          s = o, a = -o;
+          dX = dx;
+          dW = -dx;
           break;
         case "c":
-          s = o, l = n;
+          dX = dx;
+          dY = dy;
       }
-      r == null && (r = e._initialGeometries);
-      const u = r.map(
-        (W) => {
-          let le = Math.max(0, W.Width + a), de = Math.max(0, W.Height + h), C = W.x + s, D = C + le, L = W.y + l, P = L + de;
-          if (e._SnapToGrid) {
-            let X = e._GridWidth * Math.round(C / e._GridWidth), Q = e._GridWidth * Math.round(D / e._GridWidth), Y = e._GridHeight * Math.round(L / e._GridHeight), ee = e._GridHeight * Math.round(P / e._GridHeight);
-            switch (i) {
+      if (initialGeometries == null) {
+        initialGeometries = my._initialGeometries;
+      }
+      const GeometryList = initialGeometries.map(
+        (Geometry) => {
+          let Width = Math.max(0, Geometry.Width + dW);
+          let Height = Math.max(0, Geometry.Height + dH);
+          let xl = Geometry.x + dX, xr = xl + Width;
+          let yt = Geometry.y + dY, yb = yt + Height;
+          if (my._SnapToGrid) {
+            let xl_ = my._GridWidth * Math.round(xl / my._GridWidth);
+            let xr_ = my._GridWidth * Math.round(xr / my._GridWidth);
+            let yt_ = my._GridHeight * Math.round(yt / my._GridHeight);
+            let yb_ = my._GridHeight * Math.round(yb / my._GridHeight);
+            switch (Mode2) {
               case "nw":
-                C = Math.min(X, D), L = Math.min(Y, P);
+                xl = Math.min(xl_, xr);
+                yt = Math.min(yt_, yb);
                 break;
               case "n":
-                L = Math.min(Y, P);
+                yt = Math.min(yt_, yb);
                 break;
               case "ne":
-                D = Math.max(C, Q), L = Math.min(Y, P);
+                xr = Math.max(xl, xr_);
+                yt = Math.min(yt_, yb);
                 break;
               case "e":
-                D = Math.max(C, Q);
+                xr = Math.max(xl, xr_);
                 break;
               case "se":
-                D = Math.max(C, Q), P = Math.max(L, ee);
+                xr = Math.max(xl, xr_);
+                yb = Math.max(yt, yb_);
                 break;
               case "s":
-                P = Math.max(L, ee);
+                yb = Math.max(yt, yb_);
                 break;
               case "sw":
-                C = Math.min(X, D), P = Math.max(L, ee);
+                xl = Math.min(xl_, xr);
+                yb = Math.max(yt, yb_);
                 break;
               case "w":
-                C = Math.min(X, D);
+                xl = Math.min(xl_, xr);
                 break;
               case "c":
-                C = X, D = C + le, L = Y, P = L + de;
+                xl = xl_;
+                xr = xl + Width;
+                yt = yt_;
+                yb = yt + Height;
             }
           }
-          return { x: C, y: L, Width: D - C, Height: P - L };
+          return { x: xl, y: yt, Width: xr - xl, Height: yb - yt };
         }
       );
-      J(t, u);
+      changeGeometriesTo(StickerList2, GeometryList);
     }
-    const be = (t, i, o) => {
-      if (p === 0)
+    const onStickerClick = (x, y, Event) => {
+      if (SelectionLimit === 0) {
         return;
-      const n = e._pointedSticker;
-      let r = !1, s, l;
-      o.shiftKey || o.metaKey ? (r = !0, T(n) ? (l = [n], c = c.filter(
-        (a) => a !== n
-      )) : (c.length === p && (l = [c.shift()]), s = [n], c.push(n))) : (l = c.filter(
-        (a) => a !== n
-      ), r = !T(n), s = r ? [n] : [], c = [n]), r && v != null && v(c), l != null && M != null && l.forEach((a) => {
-        M(a);
-      }), s != null && b != null && s.forEach((a) => {
-        b(a);
-      }), r && e.rerender();
-    }, we = pe(e._StickerRecognizerSlot, {
+      }
+      const Sticker = my._pointedSticker;
+      let SelectionChanged = false;
+      let StickersToSelect, StickersToDeselect;
+      if (Event.shiftKey || Event.metaKey) {
+        SelectionChanged = true;
+        if (StickerIsSelected(Sticker)) {
+          StickersToDeselect = [Sticker];
+          selectedStickers = selectedStickers.filter(
+            (selectedSticker) => selectedSticker !== Sticker
+          );
+        } else {
+          if (selectedStickers.length === SelectionLimit) {
+            StickersToDeselect = [selectedStickers.shift()];
+          }
+          StickersToSelect = [Sticker];
+          selectedStickers.push(Sticker);
+        }
+      } else {
+        StickersToDeselect = selectedStickers.filter(
+          (selectedSticker) => selectedSticker !== Sticker
+        );
+        SelectionChanged = !StickerIsSelected(Sticker);
+        StickersToSelect = SelectionChanged ? [Sticker] : [];
+        selectedStickers = [Sticker];
+      }
+      if (SelectionChanged && onSelectionChange != null) {
+        onSelectionChange(selectedStickers);
+      }
+      if (StickersToDeselect != null && onStickerDeselected != null) {
+        StickersToDeselect.forEach((deselectedSticker) => {
+          onStickerDeselected(deselectedSticker);
+        });
+      }
+      if (StickersToSelect != null && onStickerSelected != null) {
+        StickersToSelect.forEach((selectedSticker) => {
+          onStickerSelected(selectedSticker);
+        });
+      }
+      if (SelectionChanged) {
+        my.rerender();
+      }
+    };
+    const StickerRecognizer = DragClickRecognizerFor(my._StickerRecognizerSlot, {
       onlyFrom: ".SNS.Cover",
       Threshold: 4,
-      onDragStarted: (t, i, o, n, r) => {
-        T(e._pointedSticker) || (r.shiftKey || r.metaKey ? F([e._pointedSticker], e._selectedStickers) : F([e._pointedSticker])), e._shapedStickers = e._selectedStickers, e._initialGeometries = e._selectedStickers.map(
-          (s) => s.Geometry
-        ), N(e._shapedStickers, "c", o, n);
+      onDragStarted: (x, y, dx, dy, Event) => {
+        if (!StickerIsSelected(my._pointedSticker)) {
+          if (Event.shiftKey || Event.metaKey) {
+            selectStickers([my._pointedSticker], my._selectedStickers);
+          } else {
+            selectStickers([my._pointedSticker]);
+          }
+        }
+        my._shapedStickers = my._selectedStickers;
+        my._initialGeometries = my._selectedStickers.map(
+          (Sticker) => Sticker.Geometry
+        );
+        changeGeometriesBy(my._shapedStickers, "c", dx, dy);
       },
-      onDragContinued: (t, i, o, n) => {
-        e._shapedStickers != null && N(e._shapedStickers, "c", o, n);
+      onDragContinued: (x, y, dx, dy) => {
+        if (my._shapedStickers == null) {
+          return;
+        }
+        changeGeometriesBy(my._shapedStickers, "c", dx, dy);
       },
-      onDragFinished: (t, i, o, n) => {
-        e._shapedStickers != null && (N(e._shapedStickers, "c", o, n), Z());
+      onDragFinished: (x, y, dx, dy) => {
+        if (my._shapedStickers == null) {
+          return;
+        }
+        changeGeometriesBy(my._shapedStickers, "c", dx, dy);
+        finishDraggingAndShaping();
       },
-      onDragCancelled: (t, i, o, n) => {
-        K();
+      onDragCancelled: (x, y, dx, dy) => {
+        abortDraggingAndShaping();
       },
-      onClicked: be
-    }), ve = (t, i) => {
-      e._ShapeMode = "c", e._pointedSticker = i, we(t);
-    }, Ce = fe(e._ShapeHandleRecognizerSlot, {
+      onClicked: onStickerClick
+    });
+    const handleStickerEvent = (Event, Sticker) => {
+      my._ShapeMode = "c";
+      my._pointedSticker = Sticker;
+      StickerRecognizer(Event);
+    };
+    const ShapeHandleRecognizer = DragRecognizerFor(my._ShapeHandleRecognizerSlot, {
       onlyFrom: ".SNS.ShapeHandle",
       Threshold: 0,
-      onDragStarted: (t, i, o, n) => {
-        e._shapedStickers = e._selectedStickers, e._initialGeometries = e._selectedStickers.map(
-          (r) => r.Geometry
-        ), N(e._shapedStickers, e._ShapeMode, o, n);
+      onDragStarted: (x, y, dx, dy) => {
+        my._shapedStickers = my._selectedStickers;
+        my._initialGeometries = my._selectedStickers.map(
+          (Sticker) => Sticker.Geometry
+        );
+        changeGeometriesBy(my._shapedStickers, my._ShapeMode, dx, dy);
       },
-      onDragContinued: (t, i, o, n) => {
-        e._shapedStickers != null && N(e._shapedStickers, e._ShapeMode, o, n);
+      onDragContinued: (x, y, dx, dy) => {
+        if (my._shapedStickers == null) {
+          return;
+        }
+        changeGeometriesBy(my._shapedStickers, my._ShapeMode, dx, dy);
       },
-      onDragFinished: (t, i, o, n) => {
-        e._shapedStickers != null && (N(e._shapedStickers, e._ShapeMode, o, n), Z());
+      onDragFinished: (x, y, dx, dy) => {
+        if (my._shapedStickers == null) {
+          return;
+        }
+        changeGeometriesBy(my._shapedStickers, my._ShapeMode, dx, dy);
+        finishDraggingAndShaping();
       },
-      onDragCancelled: (t, i, o, n) => {
-        K();
+      onDragCancelled: (x, y, dx, dy) => {
+        abortDraggingAndShaping();
       }
-    }), B = (t, i) => {
-      e._ShapeMode = i, Ce(t);
+    });
+    const handleShapeEvent = (Event, Mode2) => {
+      my._ShapeMode = Mode2;
+      ShapeHandleRecognizer(Event);
     };
-    function Le(t) {
-      return function(i) {
-        i.button === 0 && F([t]);
+    function builtinSelectionFor(Sticker) {
+      return function(Event) {
+        if (Event.button === 0) {
+          selectStickers([Sticker]);
+        }
       };
     }
-    const ae = /* @__PURE__ */ new WeakMap(), G = /* @__PURE__ */ new WeakMap();
-    function Me(t) {
-      let i = ae.get(t);
-      return i == null && ae.set(t, i = fe(t, {
-        onlyFrom: ".builtinDraggable",
-        neverFrom: ".notBuiltinDraggable",
-        Threshold: 4,
-        onDragStarted: (o, n, r, s, l) => {
-          G.set(t, t.Geometry), N([t], "c", r, s, [G.get(t)]);
-        },
-        onDragContinued: (o, n, r, s) => {
-          G.has(t) && N([t], "c", r, s, [G.get(t)]);
-        },
-        onDragFinished: (o, n, r, s) => {
-          G.has(t) && (N([t], "c", r, s, [G.get(t)]), G.delete(t));
-        },
-        onDragCancelled: (o, n, r, s) => {
-          G.has(t) && J([t], [G.get(t)]), G.delete(t);
+    const DragRecognizer = /* @__PURE__ */ new WeakMap();
+    const initialGeometry = /* @__PURE__ */ new WeakMap();
+    function builtinDraggingFor(Sticker) {
+      let Recognizer = DragRecognizer.get(Sticker);
+      if (Recognizer == null) {
+        DragRecognizer.set(Sticker, Recognizer = DragRecognizerFor(Sticker, {
+          onlyFrom: ".builtinDraggable",
+          neverFrom: ".notBuiltinDraggable",
+          Threshold: 4,
+          onDragStarted: (x, y, dx, dy, Event) => {
+            initialGeometry.set(Sticker, Sticker.Geometry);
+            changeGeometriesBy([Sticker], "c", dx, dy, [initialGeometry.get(Sticker)]);
+          },
+          onDragContinued: (x, y, dx, dy) => {
+            if (!initialGeometry.has(Sticker)) {
+              return;
+            }
+            changeGeometriesBy([Sticker], "c", dx, dy, [initialGeometry.get(Sticker)]);
+          },
+          onDragFinished: (x, y, dx, dy) => {
+            if (!initialGeometry.has(Sticker)) {
+              return;
+            }
+            changeGeometriesBy([Sticker], "c", dx, dy, [initialGeometry.get(Sticker)]);
+            initialGeometry.delete(Sticker);
+          },
+          onDragCancelled: (x, y, dx, dy) => {
+            if (initialGeometry.has(Sticker)) {
+              changeGeometriesTo([Sticker], [initialGeometry.get(Sticker)]);
+            }
+            initialGeometry.delete(Sticker);
+          }
+        }));
+      }
+      return Recognizer;
+    }
+    function horizontalGuides() {
+      if (my._shapedStickers == null) {
+        return "";
+      }
+      const EdgeSet = {};
+      const CenterSet = {};
+      my._StickerList.filter(
+        (Sticker) => !StickerIsSelected(Sticker)
+      ).forEach((Sticker) => {
+        const { y, Height } = Sticker.Geometry;
+        const yt = Math.round(y);
+        const ym = Math.round(y + Height / 2);
+        const yb = Math.round(y + Height);
+        EdgeSet[yt] = EdgeSet[yb] = true;
+        CenterSet[ym] = true;
+      });
+      const horizontalSet = {};
+      my._shapedStickers.forEach((Sticker) => {
+        const { y, Height } = Sticker.Geometry;
+        const yt = Math.round(y);
+        const ym = Math.round(y + Height / 2);
+        const yb = Math.round(y + Height);
+        if (EdgeSet[yt]) {
+          horizontalSet[yt] = "Edge";
         }
-      })), i;
-    }
-    function Ge() {
-      if (e._shapedStickers == null)
-        return "";
-      const t = {}, i = {};
-      e._StickerList.filter(
-        (r) => !T(r)
-      ).forEach((r) => {
-        const { y: s, Height: l } = r.Geometry, a = Math.round(s), h = Math.round(s + l / 2), u = Math.round(s + l);
-        t[a] = t[u] = !0, i[h] = !0;
+        if (EdgeSet[ym] && horizontalSet[ym] !== "Edge") {
+          horizontalSet[ym] = "Center";
+        }
+        if (EdgeSet[yb]) {
+          horizontalSet[yb] = "Edge";
+        }
+        if (CenterSet[yt] && horizontalSet[yt] !== "Edge") {
+          horizontalSet[yt] = "Center";
+        }
+        if (CenterSet[ym] && horizontalSet[ym] !== "Edge") {
+          horizontalSet[ym] = "Center";
+        }
+        if (CenterSet[yb] && horizontalSet[yb] !== "Edge") {
+          horizontalSet[yb] = "Center";
+        }
       });
-      const o = {};
-      e._shapedStickers.forEach((r) => {
-        const { y: s, Height: l } = r.Geometry, a = Math.round(s), h = Math.round(s + l / 2), u = Math.round(s + l);
-        t[a] && (o[a] = "Edge"), t[h] && o[h] !== "Edge" && (o[h] = "Center"), t[u] && (o[u] = "Edge"), i[a] && o[a] !== "Edge" && (o[a] = "Center"), i[h] && o[h] !== "Edge" && (o[h] = "Center"), i[u] && o[u] !== "Edge" && (o[u] = "Center");
-      });
-      const n = [];
-      for (let r in o)
-        o[r] != null && n.push(r);
-      return _`${n.map((r) => _`
-          <div class="SNS horizontalGuide ${o[r]}" style="top:${r}px"/>
+      const horizontalList = [];
+      for (let y in horizontalSet) {
+        if (horizontalSet[y] != null) {
+          horizontalList.push(y);
+        }
+      }
+      return m`${horizontalList.map((y) => m`
+          <div class="SNS horizontalGuide ${horizontalSet[y]}" style="top:${y}px"/>
         `)}`;
     }
-    function Ee() {
-      if (e._shapedStickers == null)
+    function verticalGuides() {
+      if (my._shapedStickers == null) {
         return "";
-      const t = {}, i = {};
-      e._StickerList.filter(
-        (r) => !T(r)
-      ).forEach((r) => {
-        const { x: s, Width: l } = r.Geometry, a = Math.round(s), h = Math.round(s + l / 2), u = Math.round(s + l);
-        t[a] = t[u] = !0, i[h] = !0;
+      }
+      const EdgeSet = {};
+      const CenterSet = {};
+      my._StickerList.filter(
+        (Sticker) => !StickerIsSelected(Sticker)
+      ).forEach((Sticker) => {
+        const { x, Width } = Sticker.Geometry;
+        const xl = Math.round(x);
+        const xm = Math.round(x + Width / 2);
+        const xr = Math.round(x + Width);
+        EdgeSet[xl] = EdgeSet[xr] = true;
+        CenterSet[xm] = true;
       });
-      const o = {};
-      e._shapedStickers.forEach((r) => {
-        const { x: s, Width: l } = r.Geometry, a = Math.round(s), h = Math.round(s + l / 2), u = Math.round(s + l);
-        t[a] && (o[a] = "Edge"), t[h] && o[h] !== "Edge" && (o[h] = "Center"), t[u] && (o[u] = "Edge"), i[a] && o[a] !== "Edge" && (o[a] = "Center"), i[h] && o[h] !== "Edge" && (o[h] = "Center"), i[u] && o[u] !== "Edge" && (o[u] = "Center");
+      const verticalSet = {};
+      my._shapedStickers.forEach((Sticker) => {
+        const { x, Width } = Sticker.Geometry;
+        const xl = Math.round(x);
+        const xm = Math.round(x + Width / 2);
+        const xr = Math.round(x + Width);
+        if (EdgeSet[xl]) {
+          verticalSet[xl] = "Edge";
+        }
+        if (EdgeSet[xm] && verticalSet[xm] !== "Edge") {
+          verticalSet[xm] = "Center";
+        }
+        if (EdgeSet[xr]) {
+          verticalSet[xr] = "Edge";
+        }
+        if (CenterSet[xl] && verticalSet[xl] !== "Edge") {
+          verticalSet[xl] = "Center";
+        }
+        if (CenterSet[xm] && verticalSet[xm] !== "Edge") {
+          verticalSet[xm] = "Center";
+        }
+        if (CenterSet[xr] && verticalSet[xr] !== "Edge") {
+          verticalSet[xr] = "Center";
+        }
       });
-      const n = [];
-      for (let r in o)
-        o[r] != null && n.push(r);
-      return _`${n.map((r) => _`
-          <div class="SNS verticalGuide ${o[r]}" style="left:${r}px"/>
+      const verticalList = [];
+      for (let x in verticalSet) {
+        if (verticalSet[x] != null) {
+          verticalList.push(x);
+        }
+      }
+      return m`${verticalList.map((x) => m`
+          <div class="SNS verticalGuide ${verticalSet[x]}" style="left:${x}px"/>
         `)}`;
     }
-    const Ne = x == null ? void 0 : _e(x);
-    return _`<div class="SNS BoardView ${m}" style=${Ne}
-        onPointerDown=${H} onPointerMove=${H}
-        onPointerUp=${H} onPointerCancel=${H}
+    const BoardStyle = Board == null ? void 0 : CSSStyleOfVisual(Board);
+    return m`<div class="SNS BoardView ${Classes}" style=${BoardStyle}
+        onPointerDown=${LassoRecognizer} onPointerMove=${LassoRecognizer}
+        onPointerUp=${LassoRecognizer} onPointerCancel=${LassoRecognizer}
       >
-        ${x == null ? _`<div class="SNS Placeholder"><div>(no Board to show)</div></div>` : g == null ? _`<div class="SNS Placeholder"><div>(no Stickers to show)</div></div>` : g.map((t) => {
-      if (!t.isVisible)
+        ${Board == null ? m`<div class="SNS Placeholder"><div>(no Board to show)</div></div>` : StickerList == null ? m`<div class="SNS Placeholder"><div>(no Stickers to show)</div></div>` : StickerList.map((Sticker) => {
+      if (!Sticker.isVisible) {
         return "";
-      const i = t.Geometry, o = T(t);
-      return _`<${Ie} Sticker=${t} key=${t.Id}
-                  selected=${o && k === "run"}
-                  SelectionFrameStyle=${R}
-                  Geometry=${i}
-                  builtinDragging=${Me(t)}
-                  builtinSelection=${Le(t)}
+      }
+      const Geometry = Sticker.Geometry;
+      const selected = StickerIsSelected(Sticker);
+      return m`<${SNS_StickerView} Sticker=${Sticker} key=${Sticker.Id}
+                  selected=${selected && Mode === "run"}
+                  SelectionFrameStyle=${SelectionFrameStyle}
+                  Geometry=${Geometry}
+                  builtinDragging=${builtinDraggingFor(Sticker)}
+                  builtinSelection=${builtinSelectionFor(Sticker)}
                 />`;
     })}
 
-        ${g != null && k === "edit" ? g.map((t) => {
-      if (!t.isVisible)
+        ${StickerList != null && Mode === "edit" ? StickerList.map((Sticker) => {
+      if (!Sticker.isVisible) {
         return "";
-      if (t.isLocked)
-        return _`
-                  <${ge} Sticker=${t} key=${t.Id + "c"}
-                    onPointerDown=${H} onPointerMove=${H}
-                    onPointerUp=${H} onPointerCancel=${H}
+      }
+      if (Sticker.isLocked) {
+        return m`
+                  <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id + "c"}
+                    onPointerDown=${LassoRecognizer} onPointerMove=${LassoRecognizer}
+                    onPointerUp=${LassoRecognizer} onPointerCancel=${LassoRecognizer}
                   />
                 `;
-      {
-        const i = T(t);
-        return _`
-                  <${ge} Sticker=${t} key=${t.Id + "c"}
-                    selected=${i}
-                    onPointerEvent=${(o) => ve(o, t)}
+      } else {
+        const selected = StickerIsSelected(Sticker);
+        return m`
+                  <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id + "c"}
+                    selected=${selected}
+                    onPointerEvent=${(Event) => handleStickerEvent(Event, Sticker)}
                   />
                 `;
       }
     }) : ""}
 
-        ${c.length > 0 ? c.filter(
-      (t) => t.isVisible && !t.isLocked
-    ).map((t) => {
-      const i = t.Id, o = t.Geometry;
-      return _`
-                <${V} key=${i + "nw"} Mode="nw" Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "nw")}/>
-                <${V} key=${i + "n"}  Mode="n"  Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "n")}/>
-                <${V} key=${i + "ne"} Mode="ne" Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "ne")}/>
-                <${V} key=${i + "e"}  Mode="e"  Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "e")}/>
-                <${V} key=${i + "se"} Mode="se" Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "se")}/>
-                <${V} key=${i + "s"}  Mode="s"  Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "s")}/>
-                <${V} key=${i + "sw"} Mode="sw" Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "sw")}/>
-                <${V} key=${i + "w"}  Mode="w"  Geometry=${o}
-                  onPointerEvent=${(n) => B(n, "w")}/>
+        ${selectedStickers.length > 0 ? selectedStickers.filter(
+      (Sticker) => Sticker.isVisible && !Sticker.isLocked
+    ).map((Sticker) => {
+      const Id = Sticker.Id;
+      const Geometry = Sticker.Geometry;
+      return m`
+                <${SNS_ShapeHandle} key=${Id + "nw"} Mode="nw" Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "nw")}/>
+                <${SNS_ShapeHandle} key=${Id + "n"}  Mode="n"  Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "n")}/>
+                <${SNS_ShapeHandle} key=${Id + "ne"} Mode="ne" Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "ne")}/>
+                <${SNS_ShapeHandle} key=${Id + "e"}  Mode="e"  Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "e")}/>
+                <${SNS_ShapeHandle} key=${Id + "se"} Mode="se" Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "se")}/>
+                <${SNS_ShapeHandle} key=${Id + "s"}  Mode="s"  Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "s")}/>
+                <${SNS_ShapeHandle} key=${Id + "sw"} Mode="sw" Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "sw")}/>
+                <${SNS_ShapeHandle} key=${Id + "w"}  Mode="w"  Geometry=${Geometry}
+                  onPointerEvent=${(Event) => handleShapeEvent(Event, "w")}/>
               `;
     }) : ""}
-        ${this._LassoStart == null ? "" : _`<div class="SNS Lasso" style=${me()}></>`}
-        ${Ge()}
-        ${Ee()}
+        ${this._LassoStart == null ? "" : m`<div class="SNS Lasso" style=${CSSGeometryOfLasso()}></>`}
+        ${horizontalGuides()}
+        ${verticalGuides()}
       </div>`;
   }
 }
-class Ie extends j {
+class SNS_StickerView extends Component {
   constructor() {
     super(...arguments);
-    S(this, "_Sticker");
+    __publicField(this, "_Sticker");
   }
   /**** componentDidMount ****/
   componentDidMount() {
-    const d = this._Sticker;
-    d._View = this.base, d._onMount != null && d._onMount();
+    const Sticker = this._Sticker;
+    Sticker["_View"] = this.base;
+    if (Sticker["_onMount"] != null) {
+      Sticker["_onMount"]();
+    }
   }
   /**** componentWillUnmount ****/
   componentWillUnmount() {
-    const d = this._Sticker;
-    d._View = void 0, d._onUnmount != null && d._onUnmount();
+    const Sticker = this._Sticker;
+    Sticker["_View"] = void 0;
+    if (Sticker["_onUnmount"] != null) {
+      Sticker["_onUnmount"]();
+    }
   }
   /**** render ****/
-  render(d) {
+  render(PropSet) {
     let {
-      Sticker: e,
-      selected: m,
-      SelectionFrameStyle: x,
-      Geometry: g,
-      builtinSelection: w,
-      builtinDragging: k
-    } = d;
-    this._Sticker = e;
-    let { x: p, y: c, Width: v, Height: b } = g;
-    Se("sticker x position", p), Se("sticker y position", c), ne("sticker width", v), ne("sticker height", b);
-    const M = p != null && v != null && c != null && b != null ? `left:${p}px; top:${c}px; width:${v}px; height:${b}px; right:auto; bottom:auto;` : "";
-    return _`<div class="SNS Sticker ${m ? "selected" : ""}" style="
-        ${M};
-        ${m && x != null ? `outline:${x};` : ""}
-        ${_e(e) || ""}
+      Sticker,
+      selected,
+      SelectionFrameStyle,
+      Geometry,
+      builtinSelection,
+      builtinDragging
+    } = PropSet;
+    this._Sticker = Sticker;
+    let { x, y, Width, Height } = Geometry;
+    allowInteger("sticker x position", x);
+    allowInteger("sticker y position", y);
+    allowOrdinal("sticker width", Width);
+    allowOrdinal("sticker height", Height);
+    const CSSGeometry = x != null && Width != null && y != null && Height != null ? `left:${x}px; top:${y}px; width:${Width}px; height:${Height}px; right:auto; bottom:auto;` : "";
+    return m`<div class="SNS Sticker ${selected ? "selected" : ""}" style="
+        ${CSSGeometry};
+        ${selected && SelectionFrameStyle != null ? `outline:${SelectionFrameStyle};` : ""}
+        ${CSSStyleOfVisual(Sticker) || ""}
       ">
-        ${e.Rendering({ builtinSelection: w, builtinDragging: k })}
+        ${Sticker.Rendering({ builtinSelection, builtinDragging })}
       </div>`;
   }
 }
-class ge extends j {
-  render($) {
-    let { Sticker: d, onPointerEvent: e, ...m } = $, { x, y: g, Width: w, Height: k } = d.Geometry;
-    const p = x != null && w != null && g != null && k != null ? `left:${x}px; top:${g}px; width:${w}px; height:${k}px; right:auto; bottom:auto;` : "";
-    return _`<div class="SNS Cover" style="${p}" ...${m}
-        onPointerDown=${e} onPointerMove=${e}
-        onPointerUp=${e} onPointerCancel=${e}
+class SNS_Cover extends Component {
+  render(PropSet) {
+    let { Sticker, onPointerEvent, ...otherProps } = PropSet;
+    let { x, y, Width, Height } = Sticker.Geometry;
+    const CSSGeometry = x != null && Width != null && y != null && Height != null ? `left:${x}px; top:${y}px; width:${Width}px; height:${Height}px; right:auto; bottom:auto;` : "";
+    return m`<div class="SNS Cover" style="${CSSGeometry}" ...${otherProps}
+        onPointerDown=${onPointerEvent} onPointerMove=${onPointerEvent}
+        onPointerUp=${onPointerEvent} onPointerCancel=${onPointerEvent}
       />`;
   }
 }
-class V extends j {
-  render($) {
-    let { Mode: d, Geometry: e, onPointerEvent: m, ...x } = $, { x: g, y: w, Width: k, Height: p } = e;
-    const c = g - 8, v = Math.round(g + k / 2) - 4, b = g + k, M = w - 8, R = Math.round(w + p / 2) - 4, z = w + p;
-    let y, f;
-    switch (d) {
+class SNS_ShapeHandle extends Component {
+  render(PropSet) {
+    let { Mode, Geometry, onPointerEvent, ...otherProps } = PropSet;
+    let { x, y, Width, Height } = Geometry;
+    const xl = x - 8, xm = Math.round(x + Width / 2) - 4, xr = x + Width;
+    const yt = y - 8, ym = Math.round(y + Height / 2) - 4, yb = y + Height;
+    let CSSGeometry, Cursor;
+    switch (Mode) {
       case "nw":
-        y = `left:${c}px; top:${M}px;`, f = "nwse";
+        CSSGeometry = `left:${xl}px; top:${yt}px;`;
+        Cursor = "nwse";
         break;
       case "n":
-        y = `left:${v}px; top:${M}px;`, f = "ns";
+        CSSGeometry = `left:${xm}px; top:${yt}px;`;
+        Cursor = "ns";
         break;
       case "ne":
-        y = `left:${b}px; top:${M}px;`, f = "nesw";
+        CSSGeometry = `left:${xr}px; top:${yt}px;`;
+        Cursor = "nesw";
         break;
       case "e":
-        y = `left:${b}px; top:${R}px;`, f = "ew";
+        CSSGeometry = `left:${xr}px; top:${ym}px;`;
+        Cursor = "ew";
         break;
       case "se":
-        y = `left:${b}px; top:${z}px;`, f = "nwse";
+        CSSGeometry = `left:${xr}px; top:${yb}px;`;
+        Cursor = "nwse";
         break;
       case "s":
-        y = `left:${v}px; top:${z}px;`, f = "ns";
+        CSSGeometry = `left:${xm}px; top:${yb}px;`;
+        Cursor = "ns";
         break;
       case "sw":
-        y = `left:${c}px; top:${z}px;`, f = "nesw";
+        CSSGeometry = `left:${xl}px; top:${yb}px;`;
+        Cursor = "nesw";
         break;
       case "w":
-        y = `left:${c}px; top:${R}px;`, f = "ew";
+        CSSGeometry = `left:${xl}px; top:${ym}px;`;
+        Cursor = "ew";
         break;
     }
-    return f = "cursor:" + f + "-resize", _`<div class="SNS ShapeHandle" style="${y} ${f}" ...${x}
-        onPointerDown=${m} onPointerMove=${m}
-        onPointerUp=${m} onPointerCancel=${m}
+    Cursor = "cursor:" + Cursor + "-resize";
+    return m`<div class="SNS ShapeHandle" style="${CSSGeometry} ${Cursor}" ...${otherProps}
+        onPointerDown=${onPointerEvent} onPointerMove=${onPointerEvent}
+        onPointerUp=${onPointerEvent} onPointerCancel=${onPointerEvent}
       />`;
   }
 }
-window.SNS_BoardView = Re;
+window.SNS_BoardView = SNS_BoardView;
 document.dispatchEvent(
   // @ts-ignore TS2339 allow global variable "SNS_BoardView"
   new CustomEvent("SNS_BoardView", { detail: window.SNS_BoardView })
 );
 export {
-  Re as SNS_BoardView
+  SNS_BoardView
 };
 //# sourceMappingURL=SNS_BoardView.js.map
