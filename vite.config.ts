@@ -8,7 +8,7 @@ export default defineConfig({
   		name:    'sns-boardview',
   		formats: ['es']
   	},
-  	minify: true,
+  	minify: false,
   	rollupOptions: {
   		external: ['javascript-interface-library','htm','preact','protoux','shareable-note-stickers','svelte-coordinate-conversion'],
       output: {
