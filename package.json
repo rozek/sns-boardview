@@ -38,7 +38,7 @@
     "javascript-interface-library": "^1.0.6",
     "preact": "^10.22.0",
     "protoux": "^0.0.24",
-    "shareable-note-stickers": "^0.0.4",
+    "shareable-note-stickers": "^0.0.5",
     "svelte-coordinate-conversion": "^1.0.2"
   }
 }
