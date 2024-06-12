@@ -6,13 +6,10 @@
   "source": "src/SNS_BoardView.ts",
   "exports": {
     "types": "./dist/SNS_BoardView.d.ts",
-    "require": "./dist/SNS_BoardView.cjs",
-    "default": "./dist/SNS_BoardView.modern.js"
+    "default": "./dist/SNS_BoardView.js"
   },
-  "main": "./dist/SNS_BoardView.cjs",
-  "module": "./dist/SNS_BoardView.esm.js",
-  "svelte": "./dist/SNS_BoardView.esm.js",
-  "umd:main": "./dist/SNS_BoardView.umd.js",
+  "module": "./dist/SNS_BoardView.js",
+  "svelte": "./dist/SNS_BoardView.js",
   "types": "./dist/SNS_BoardView.d.ts",
   "keywords": [
     "crdt"
@@ -41,7 +38,7 @@
     "javascript-interface-library": "^1.0.6",
     "preact": "^10.22.0",
     "protoux": "^0.0.24",
-    "shareable-note-stickers": "^0.0.3",
+    "shareable-note-stickers": "^0.0.4",
     "svelte-coordinate-conversion": "^1.0.2"
   }
 }
