@@ -3,14 +3,14 @@
   "version": "0.0.4",
   "description": "a \"preact\" editor component for \"shareable-note-stickers\"",
   "type": "module",
-  "source": "src/SNS_BoardView.ts",
+  "source": "src/sns-boardview.ts",
   "exports": {
-    "types": "./dist/SNS_BoardView.d.ts",
-    "default": "./dist/SNS_BoardView.js"
+    "types": "./dist/sns-boardview.d.ts",
+    "default": "./dist/sns-boardview.js"
   },
-  "module": "./dist/SNS_BoardView.js",
-  "svelte": "./dist/SNS_BoardView.js",
-  "types": "./dist/SNS_BoardView.d.ts",
+  "module": "./dist/sns-boardview.js",
+  "svelte": "./dist/sns-boardview.js",
+  "types": "./dist/sns-boardview.d.ts",
   "keywords": [
     "crdt"
   ],
