@@ -937,4 +937,4 @@ document.dispatchEvent(
 export {
   SNS_BoardView
 };
-//# sourceMappingURL=SNS_BoardView.js.map
+//# sourceMappingURL=sns-boardview.js.map
