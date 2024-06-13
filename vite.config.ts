@@ -5,7 +5,7 @@ import path from 'path'
 export default defineConfig({
   build: {  	
   	lib: {
-  		entry:   path.resolve(__dirname, 'src/SNS_BoardView.ts'),
+  		entry:   path.resolve(__dirname, 'src/sns-boardview.ts'),
   		name:    'sns-boardview',
   		formats: ['es']
   	},
