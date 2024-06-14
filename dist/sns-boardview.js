@@ -1,9 +1,6 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 import { allowTextline, allowListSatisfying, allowOneOf, allowOrdinal, allowFunction, allowText, allowBoolean, allowCardinal, allowInteger } from "javascript-interface-library";
 import { allowBoard, ValueIsSticker, CSSStyleOfVisual } from "shareable-note-stickers";
 import Conversion from "svelte-coordinate-conversion";
