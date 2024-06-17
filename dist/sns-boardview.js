@@ -185,6 +185,7 @@ class SNS_BoardView extends Component {
       this._unmountBoard();
       this._mountBoard(Board);
     }
+    console.log("SNS_BoardView render, selectedStickers", selectedStickers);
     function finishDraggingAndShaping() {
       my._pointedSticker = void 0;
       my._shapedStickers = void 0;
