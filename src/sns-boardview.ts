@@ -227,7 +227,7 @@
         this._unmountBoard()
         this._mountBoard(Board)
       }
-
+console.log('SNS_BoardView render, selectedStickers',selectedStickers)
     /**** finishDraggingAndShaping ****/
 
       function finishDraggingAndShaping ():void {
