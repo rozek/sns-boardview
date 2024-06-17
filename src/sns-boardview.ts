@@ -398,8 +398,8 @@
 
             const { x,y, Width,Height } = Sticker.Geometry
             return (
-              (LassoX0 <= x) && (x <= LassoX1+Width) &&
-              (LassoY0 <= y) && (y <= LassoY1+Height)
+              (LassoX0 <= x) && (x+Width  <= LassoX1) &&
+              (LassoY0 <= y) && (y+Height <= LassoY1)
             )
           })
         }
