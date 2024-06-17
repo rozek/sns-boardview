@@ -37,8 +37,8 @@
   "dependencies": {
     "htm": "^3.1.1",
     "javascript-interface-library": "^1.0.6",
-    "protoux": "^0.0.24",
-    "shareable-note-stickers": "^0.0.8",
+    "protoux": "^0.0.25",
+    "shareable-note-stickers": "^0.0.9",
     "svelte-coordinate-conversion": "^1.0.2"
   }
 }
