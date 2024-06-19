@@ -1,6 +1,6 @@
 {
   "name": "sns-boardview",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "a \"preact\" editor component for \"shareable-note-stickers\"",
   "type": "module",
   "source": "src/sns-boardview.ts",
