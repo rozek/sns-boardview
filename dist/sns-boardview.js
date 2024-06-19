@@ -4,10 +4,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 import { allowTextline, allowListSatisfying, allowOneOf, allowOrdinal, allowFunction, allowText, allowBoolean, allowCardinal, allowInteger } from "javascript-interface-library";
 import { allowBoard, ValueIsSticker, CSSStyleOfVisual } from "shareable-note-stickers";
 import Conversion from "svelte-coordinate-conversion";
-import { h, Component } from "preact";
-import e from "htm";
+import { Component, html } from "htm/preact";
 import { DragClickRecognizerFor, DragRecognizerFor } from "protoux";
-var m = e.bind(h);
 const { fromDocumentTo } = Conversion;
 const Stylesheet = document.createElement("style");
 Stylesheet.setAttribute("id", "SNS Stylesheet");
@@ -694,7 +692,7 @@ class SNS_BoardView extends Component {
           horizontalList.push(y);
         }
       }
-      return m`${horizontalList.map((y) => m`
+      return html`${horizontalList.map((y) => html`
           <div class="SNS horizontalGuide ${horizontalSet[y]}" style="top:${y}px"/>
         `)}`;
     }
@@ -745,22 +743,22 @@ class SNS_BoardView extends Component {
           verticalList.push(x);
         }
       }
-      return m`${verticalList.map((x) => m`
+      return html`${verticalList.map((x) => html`
           <div class="SNS verticalGuide ${verticalSet[x]}" style="left:${x}px"/>
         `)}`;
     }
     const BoardStyle = Board == null ? void 0 : CSSStyleOfVisual(Board);
-    return m`<div class="SNS BoardView ${Classes}" style=${BoardStyle}
+    return html`<div class="SNS BoardView ${Classes}" style=${BoardStyle}
         onPointerDown=${LassoRecognizer} onPointerMove=${LassoRecognizer}
         onPointerUp=${LassoRecognizer} onPointerCancel=${LassoRecognizer}
       >
-        ${Board == null ? m`<div class="SNS Placeholder"><div>(no Board to show)</div></div>` : StickerList == null ? m`<div class="SNS Placeholder"><div>(no Stickers to show)</div></div>` : StickerList.map((Sticker) => {
+        ${Board == null ? html`<div class="SNS Placeholder"><div>(no Board to show)</div></div>` : StickerList == null ? html`<div class="SNS Placeholder"><div>(no Stickers to show)</div></div>` : StickerList.map((Sticker) => {
       if (!Sticker.isVisible) {
         return "";
       }
       const Geometry = Sticker.Geometry;
       const selected = StickerIsSelected(Sticker);
-      return m`<${SNS_StickerView} Sticker=${Sticker} key=${Sticker.Id}
+      return html`<${SNS_StickerView} Sticker=${Sticker} key=${Sticker.Id}
                   selected=${selected && Mode === "run"}
                   SelectionFrameStyle=${SelectionFrameStyle}
                   Geometry=${Geometry}
@@ -774,7 +772,7 @@ class SNS_BoardView extends Component {
         return "";
       }
       if (Sticker.isLocked) {
-        return m`
+        return html`
                   <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id + "c"}
                     onPointerDown=${LassoRecognizer} onPointerMove=${LassoRecognizer}
                     onPointerUp=${LassoRecognizer} onPointerCancel=${LassoRecognizer}
@@ -782,7 +780,7 @@ class SNS_BoardView extends Component {
                 `;
       } else {
         const selected = StickerIsSelected(Sticker);
-        return m`
+        return html`
                   <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id + "c"}
                     selected=${selected}
                     onPointerEvent=${(Event) => handleStickerEvent(Event, Sticker)}
@@ -796,7 +794,7 @@ class SNS_BoardView extends Component {
     ).map((Sticker) => {
       const Id = Sticker.Id;
       const Geometry = Sticker.Geometry;
-      return m`
+      return html`
                 <${SNS_ShapeHandle} key=${Id + "nw"} Mode="nw" Geometry=${Geometry}
                   onPointerEvent=${(Event) => handleShapeEvent(Event, "nw")}/>
                 <${SNS_ShapeHandle} key=${Id + "n"}  Mode="n"  Geometry=${Geometry}
@@ -815,7 +813,7 @@ class SNS_BoardView extends Component {
                   onPointerEvent=${(Event) => handleShapeEvent(Event, "w")}/>
               `;
     }) : ""}
-        ${this._LassoStart == null ? "" : m`<div class="SNS Lasso" style=${CSSGeometryOfLasso()}></>`}
+        ${this._LassoStart == null ? "" : html`<div class="SNS Lasso" style=${CSSGeometryOfLasso()}></>`}
         ${horizontalGuides()}
         ${verticalGuides()}
       </div>`;
@@ -859,7 +857,7 @@ class SNS_StickerView extends Component {
     allowOrdinal("sticker width", Width);
     allowOrdinal("sticker height", Height);
     const CSSGeometry = x != null && Width != null && y != null && Height != null ? `left:${x}px; top:${y}px; width:${Width}px; height:${Height}px; right:auto; bottom:auto;` : "";
-    return m`<div class="SNS Sticker ${selected ? "selected" : ""}" style="
+    return html`<div class="SNS Sticker ${selected ? "selected" : ""}" style="
         ${CSSGeometry};
         ${selected && SelectionFrameStyle != null ? `outline:${SelectionFrameStyle};` : ""}
         ${CSSStyleOfVisual(Sticker) || ""}
@@ -873,7 +871,7 @@ class SNS_Cover extends Component {
     let { Sticker, onPointerEvent, ...otherProps } = PropSet;
     let { x, y, Width, Height } = Sticker.Geometry;
     const CSSGeometry = x != null && Width != null && y != null && Height != null ? `left:${x}px; top:${y}px; width:${Width}px; height:${Height}px; right:auto; bottom:auto;` : "";
-    return m`<div class="SNS Cover" style="${CSSGeometry}" ...${otherProps}
+    return html`<div class="SNS Cover" style="${CSSGeometry}" ...${otherProps}
         onPointerDown=${onPointerEvent} onPointerMove=${onPointerEvent}
         onPointerUp=${onPointerEvent} onPointerCancel=${onPointerEvent}
       />`;
@@ -921,7 +919,7 @@ class SNS_ShapeHandle extends Component {
         break;
     }
     Cursor = "cursor:" + Cursor + "-resize";
-    return m`<div class="SNS ShapeHandle" style="${CSSGeometry} ${Cursor}" ...${otherProps}
+    return html`<div class="SNS ShapeHandle" style="${CSSGeometry} ${Cursor}" ...${otherProps}
         onPointerDown=${onPointerEvent} onPointerMove=${onPointerEvent}
         onPointerUp=${onPointerEvent} onPointerCancel=${onPointerEvent}
       />`;
