@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "javascript-interface-library": "^1.0.6",
-    "protoux": "^0.0.28",
+    "protoux": "^0.0.29",
     "shareable-note-stickers": "^0.0.14",
     "svelte-coordinate-conversion": "^1.0.2"
   },
