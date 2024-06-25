@@ -35,8 +35,8 @@
   "peerDependencies": {
     "htm": "github:rozek/htm",
     "hyperactiv": "github:rozek/hyperactiv",
-    "protoux": "^0.0.29",
-    "shareable-note-stickers": "^0.0.14"
+    "protoux": "github:rozek/protoux",
+    "shareable-note-stickers": "github:rozek/shareable-note-stickers"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
