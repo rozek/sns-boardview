@@ -1,5 +1,9 @@
+/*******************************************************************************
+*                                                                              *
+*                BoardView for "Shareable Note Stickers" (SNS)                 *
+*                                                                              *
+*******************************************************************************/
 import { Component } from 'htm/preact';
-
 /**** make some existing types indexable ****/
 interface Indexable {
     [Key: string]: any;
