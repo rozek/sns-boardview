@@ -66,11 +66,19 @@
 
   .SNS.Sticker {}
   .SNS.Sticker > .SNS {
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;
+    user-select:none;
+
     display:block; position:absolute;
     left:0px; top:0px; width:100%; height:100%; right:auto; bottom:auto;
   }
 
-  .SNS.Cover { user-select:none; z-index:1000000 }
+  .SNS.Cover {
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;
+    user-select:none;
+
+    z-index:1000000;
+  }
 
 /**** Selection Markers ****/
 
