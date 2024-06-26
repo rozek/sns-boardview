@@ -6,7 +6,7 @@
   "source": "src/sns-boardview.ts",
   "exports": {
     "types": "./dist/sns-boardview.d.ts",
-    "default": "./dist/sns-boardview.js"
+    "default": "./dist/sns-boardview.modern.js"
   },
   "module": "./dist/sns-boardview.js",
   "svelte": "./dist/sns-boardview.js",
@@ -21,7 +21,7 @@
     "url": "https://github.com/rozek/sns-boardview/issues"
   },
   "scripts": {
-    "build": "rimraf dist && tsc && vite build --sourcemap true --assetsDir .",
+    "build": "rimraf dist && microbundle --format modern,esm",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -38,6 +38,7 @@
     "shareable-note-stickers": "github:rozek/shareable-note-stickers"
   },
   "devDependencies": {
+    "microbundle": "^0.15.1",
     "rimraf": "^3.0.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.13",
