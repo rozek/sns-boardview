@@ -34,7 +34,6 @@
   },
   "peerDependencies": {
     "htm": "github:rozek/htm",
-    "hyperactiv": "github:rozek/hyperactiv",
     "protoux": "github:rozek/protoux",
     "shareable-note-stickers": "github:rozek/shareable-note-stickers"
   },
