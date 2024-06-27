@@ -235,7 +235,7 @@
         this._unmountBoard()
         this._mountBoard(Board)
       }
-console.log('SNS_BoardView render, selectedStickers',selectedStickers)
+
     /**** finishDraggingAndShaping ****/
 
       function finishDraggingAndShaping ():void {
@@ -436,7 +436,8 @@ console.log('SNS_BoardView render, selectedStickers',selectedStickers)
       }
 
       const LassoRecognizer = DragClickRecognizerFor(my._LassoRecognizerSlot, {
-        onlyFrom:     '.SNS.BoardView',
+        onlyFrom:     '.SNS.BoardView,.SNS.Sticker,.SNS.Sticker *',
+        neverFrom:    '.SNS.Sticker.selectable,.SNS.Sticker.selectable *',
         Threshold:    4,
         onDragStarted:(x:number,y:number, dx:number,dy:number) => {
           my._SelectionBeforeLasso = selectedStickers.slice()
@@ -804,10 +805,12 @@ console.log('SNS_BoardView render, selectedStickers',selectedStickers)
             : StickerList.map((Sticker:SNS_Sticker) => {
                 if (! Sticker.isVisible) { return '' }
 
-                const Geometry = Sticker.Geometry
-                const selected = StickerIsSelected(Sticker)
+                const Geometry   = Sticker.Geometry
+                const selectable = Sticker.isSelectable     // Mode-independent!
+                const selected   = StickerIsSelected(Sticker)
 
                 return html`<${SNS_StickerView} Sticker=${Sticker} key=${Sticker.Id}
+                  selectable=${selectable}
                   selected=${selected && (Mode === 'run')}
                   SelectionFrameStyle=${SelectionFrameStyle}
                   Geometry=${Geometry}
@@ -821,23 +824,15 @@ console.log('SNS_BoardView render, selectedStickers',selectedStickers)
           ? StickerList.map((Sticker:SNS_Sticker) => {
               if (! Sticker.isVisible) { return '' }
 
-              if (Sticker.isLocked) {
-                return html`
-                  <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id+'c'}
-                    onPointerDown=${LassoRecognizer} onPointerMove=${LassoRecognizer}
-                    onPointerUp=${LassoRecognizer} onPointerCancel=${LassoRecognizer}
-                  />
-                `
-              } else {
-                const selected = StickerIsSelected(Sticker)
+              const selected = StickerIsSelected(Sticker)
 
-                return html`
-                  <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id+'c'}
-                    selected=${selected}
-                    onPointerEvent=${(Event:PointerEvent) => handleStickerEvent(Event,Sticker)}
-                  />
-                `
-              }
+              return html`
+                <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id+'c'}
+                  style="${Sticker.isLocked ? 'pointer-events:none' : ''}"
+                  selected=${selected}
+                  onPointerEvent=${(Event:PointerEvent) => handleStickerEvent(Event,Sticker)}
+                />
+              `
             })
           : ''
         }
@@ -912,7 +907,7 @@ console.log('SNS_BoardView render, selectedStickers',selectedStickers)
 
     public render (PropSet:Indexable):any {
       let {
-        Sticker, selected, SelectionFrameStyle,
+        Sticker, selectable, selected, SelectionFrameStyle,
         Geometry, builtinSelection, builtinDragging
       } = PropSet
 
@@ -929,12 +924,17 @@ console.log('SNS_BoardView render, selectedStickers',selectedStickers)
         : ''
       )
 
-      return html`<div class="SNS Sticker ${selected ? 'selected' : ''}" style="
+      return html`<div class="
+        SNS Sticker ${selectable ? 'selectable' : ''} ${selected ? 'selected' : ''}
+      " style="
         ${CSSGeometry};
         ${selected && (SelectionFrameStyle != null) ? `outline:${SelectionFrameStyle};` : ''}
         ${CSSStyleOfVisual(Sticker) || ''}
       ">
-        ${Sticker.Rendering({ builtinSelection,builtinDragging })}
+        ${selectable
+          ? Sticker.Rendering({ builtinSelection,builtinDragging })
+          : Sticker.Rendering()
+        }
       </div>`
     }
   }//------------------------------------------------------------------------------
