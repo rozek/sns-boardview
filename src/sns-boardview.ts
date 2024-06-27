@@ -806,6 +806,7 @@
                 if (! Sticker.isVisible) { return '' }
 
                 const Geometry   = Sticker.Geometry
+// @ts-ignore TS2339 strange: TS does not recognize "isSelectable"
                 const selectable = Sticker.isSelectable     // Mode-independent!
                 const selected   = StickerIsSelected(Sticker)
 
