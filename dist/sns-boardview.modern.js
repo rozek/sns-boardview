@@ -11,19 +11,18 @@ import{allowTextline as e,allowListSatisfying as t,allowOneOf as n,allowOrdinal 
         ${0}
         ${0}
       </div>`),u,ce,ne,ne,ne,ne,null==_?p(w||(w=B`<div class="SNS Placeholder"><div>(no Board to show)</div></div>`)):null==m?p(M||(M=B`<div class="SNS Placeholder"><div>(no Stickers to show)</div></div>`)):m.map(e=>{if(!e.isVisible)return"";const t=e.Geometry,n=e.isSelectable,o=Y(e);return p(G||(G=B`<${0} Sticker=${0} key=${0}
-                  selectable=${0}
                   selected=${0}
                   SelectionFrameStyle=${0}
                   Geometry=${0}
+                  selectable=${0}
                   builtinDragging=${0}
                   builtinSelection=${0}
-                />`),F,e,e.Id,n,o&&"run"===N,R,t,function(e){let t=le.get(e);return null==t&&le.set(e,t=k(e,{onlyFrom:".builtinDraggable",neverFrom:".notBuiltinDraggable",Threshold:4,onDragStarted:(t,n,o,i,r)=>{de.set(e,e.Geometry),ie([e],"c",o,i,[de.get(e)])},onDragContinued:(t,n,o,i)=>{de.has(e)&&ie([e],"c",o,i,[de.get(e)])},onDragFinished:(t,n,o,i)=>{de.has(e)&&(ie([e],"c",o,i,[de.get(e)]),de.delete(e))},onDragCancelled:(t,n,o,i)=>{de.has(e)&&oe([e],[de.get(e)]),de.delete(e)}})),t}(e),function(e){return function(t){0===t.button&&X([e])}}(e))}),null!=m&&"edit"===N?m.map(e=>{if(!e.isVisible)return"";const t=Y(e);return p(E||(E=B`
+                />`),F,e,e.Id,o&&"run"===N,R,t,n,n&&function(e){let t=le.get(e);return null==t&&le.set(e,t=k(e,{onlyFrom:".builtinDraggable",neverFrom:".notBuiltinDraggable",Threshold:4,onDragStarted:(t,n,o,i,r)=>{de.set(e,e.Geometry),ie([e],"c",o,i,[de.get(e)])},onDragContinued:(t,n,o,i)=>{de.has(e)&&ie([e],"c",o,i,[de.get(e)])},onDragFinished:(t,n,o,i)=>{de.has(e)&&(ie([e],"c",o,i,[de.get(e)]),de.delete(e))},onDragCancelled:(t,n,o,i)=>{de.has(e)&&oe([e],[de.get(e)]),de.delete(e)}})),t}(e),n&&function(e){return function(t){0===t.button&&X([e])}}(e))}),null!=m&&"edit"===N?m.map(e=>{if(!e.isVisible)return"";const t=Y(e);return p(E||(E=B`
                 <${0} Sticker=${0} key=${0}
-                  style="${0}"
                   selected=${0}
                   onPointerEvent=${0}
                 />
-              `),z,e,e.Id+"c",e.isLocked?"pointer-events:none":"",t,t=>((e,t)=>{S._ShapeMode="c",S._pointedSticker=t,re(e)})(t,e))}):"",D.length>0?D.filter(e=>e.isVisible&&!e.isLocked).map(e=>{const t=e.Id,n=e.Geometry;return p(C||(C=B`
+              `),z,e,e.Id+"c",t,t=>((e,t)=>{S._ShapeMode="c",S._pointedSticker=t,re(e)})(t,e))}):"",D.length>0?D.filter(e=>e.isVisible).map(e=>{const t=e.Id,n=e.Geometry;return p(C||(C=B`
                 <${0} key=${0} Mode="nw" Geometry=${0}
                   onPointerEvent=${0}/>
                 <${0} key=${0}  Mode="n"  Geometry=${0}
@@ -52,10 +51,12 @@ import{allowTextline as e,allowListSatisfying as t,allowOneOf as n,allowOrdinal 
         ${0}
       ">
         ${0}
-      </div>`),n?"selectable":"",i?"selected":"",k,i&&null!=r?`outline:${r};`:"",h(t)||"",n?t.Rendering({builtinSelection:a,builtinDragging:d}):t.Rendering())}}class z extends u{render(e){let{Sticker:t,onPointerEvent:n}=e,o=_(e,m),{x:i,y:r,Width:s,Height:a}=t.Geometry;const l=null!=i&&null!=s&&null!=r&&null!=a?`left:${i}px; top:${r}px; width:${s}px; height:${a}px; right:auto; bottom:auto;`:"";return p(P||(P=B`<div class="SNS Cover" style="${0}" ...${0}
+      </div>`),n?"selectable":"",i?"selected":"",k,i&&null!=r?`outline:${r};`:"",h(t)||"",n?t.Rendering({builtinSelection:a,builtinDragging:d}):t.Rendering())}}class z extends u{render(e){let{Sticker:t,onPointerEvent:n}=e,o=_(e,m),{x:i,y:r,Width:s,Height:a}=t.Geometry;const l=null!=i&&null!=s&&null!=r&&null!=a?`left:${i}px; top:${r}px; width:${s}px; height:${a}px; right:auto; bottom:auto;`:"";return p(P||(P=B`<div class="SNS Cover" style="
+        ${0} ${0}
+      " ...${0}
         onPointerDown=${0} onPointerMove=${0}
         onPointerUp=${0} onPointerCancel=${0}
-      />`),l,o,n,n,n,n)}}class T extends u{render(e){let{Mode:t,Geometry:n,onPointerEvent:o}=e,i=_(e,$),{x:r,y:s,Width:a,Height:l}=n;const d=r-8,c=Math.round(r+a/2)-4,h=r+a,S=s-8,u=Math.round(s+l/2)-4,g=s+l;let k,m;switch(t){case"nw":k=`left:${d}px; top:${S}px;`,m="nwse";break;case"n":k=`left:${c}px; top:${S}px;`,m="ns";break;case"ne":k=`left:${h}px; top:${S}px;`,m="nesw";break;case"e":k=`left:${h}px; top:${u}px;`,m="ew";break;case"se":k=`left:${h}px; top:${g}px;`,m="nwse";break;case"s":k=`left:${c}px; top:${g}px;`,m="ns";break;case"sw":k=`left:${d}px; top:${g}px;`,m="nesw";break;case"w":k=`left:${d}px; top:${u}px;`,m="ew"}return m="cursor:"+m+"-resize",p(D||(D=B`<div class="SNS ShapeHandle" style="${0} ${0}" ...${0}
+      />`),l,t.isLocked?"pointer-events:none":"",o,n,n,n,n)}}class T extends u{render(e){let{Mode:t,Geometry:n,onPointerEvent:o}=e,i=_(e,$),{x:r,y:s,Width:a,Height:l}=n;const d=r-8,c=Math.round(r+a/2)-4,h=r+a,S=s-8,u=Math.round(s+l/2)-4,g=s+l;let k,m;switch(t){case"nw":k=`left:${d}px; top:${S}px;`,m="nwse";break;case"n":k=`left:${c}px; top:${S}px;`,m="ns";break;case"ne":k=`left:${h}px; top:${S}px;`,m="nesw";break;case"e":k=`left:${h}px; top:${u}px;`,m="ew";break;case"se":k=`left:${h}px; top:${g}px;`,m="nwse";break;case"s":k=`left:${c}px; top:${g}px;`,m="ns";break;case"sw":k=`left:${d}px; top:${g}px;`,m="nesw";break;case"w":k=`left:${d}px; top:${u}px;`,m="ew"}return m="cursor:"+m+"-resize",p(D||(D=B`<div class="SNS ShapeHandle" style="${0} ${0}" ...${0}
         onPointerDown=${0} onPointerMove=${0}
         onPointerUp=${0} onPointerCancel=${0}
       />`),k,m,i,o,o,o,o)}}window.SNS_BoardView=V,document.dispatchEvent(new CustomEvent("SNS_BoardView",{detail:window.SNS_BoardView}));export{V as SNS_BoardView};
