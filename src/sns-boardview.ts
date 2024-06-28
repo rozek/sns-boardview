@@ -811,12 +811,12 @@
                 const selected   = StickerIsSelected(Sticker)
 
                 return html`<${SNS_StickerView} Sticker=${Sticker} key=${Sticker.Id}
-                  selectable=${selectable}
                   selected=${selected && (Mode === 'run')}
                   SelectionFrameStyle=${SelectionFrameStyle}
                   Geometry=${Geometry}
-                  builtinDragging=${builtinDraggingFor(Sticker)}
-                  builtinSelection=${builtinSelectionFor(Sticker)}
+                  selectable=${selectable}
+                  builtinDragging=${selectable && builtinDraggingFor(Sticker)}
+                  builtinSelection=${selectable &&builtinSelectionFor(Sticker)}
                 />`
               })
         }
@@ -829,7 +829,6 @@
 
               return html`
                 <${SNS_Cover} Sticker=${Sticker} key=${Sticker.Id+'c'}
-                  style="${Sticker.isLocked ? 'pointer-events:none' : ''}"
                   selected=${selected}
                   onPointerEvent=${(Event:PointerEvent) => handleStickerEvent(Event,Sticker)}
                 />
@@ -840,7 +839,7 @@
 
         ${(selectedStickers.length > 0)
           ? selectedStickers.filter(
-              (Sticker:SNS_Sticker) => Sticker.isVisible && ! Sticker.isLocked
+              (Sticker:SNS_Sticker) => Sticker.isVisible
             ).map((Sticker:SNS_Sticker) => {
               const Id       = Sticker.Id
               const Geometry = Sticker.Geometry
@@ -954,7 +953,9 @@
         : ''
       )
 
-      return html`<div class="SNS Cover" style="${CSSGeometry}" ...${otherProps}
+      return html`<div class="SNS Cover" style="
+        ${CSSGeometry} ${Sticker.isLocked ? 'pointer-events:none' : ''}
+      " ...${otherProps}
         onPointerDown=${onPointerEvent} onPointerMove=${onPointerEvent}
         onPointerUp=${onPointerEvent} onPointerCancel=${onPointerEvent}
       />`
