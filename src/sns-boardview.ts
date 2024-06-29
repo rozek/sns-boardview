@@ -393,6 +393,8 @@
         if (LassoMode === 'touch') {
           return my._StickerList.filter((Sticker:SNS_Sticker) => {
             if (! Sticker.isVisible || Sticker.isLocked) { return false }
+// @ts-ignore TS2339 strange: why does TS not recognize "isSelectable"?
+            if ((Mode === 'run') && ! Sticker.isSelectable) { return false }
 
             const { x,y, Width,Height } = Sticker.Geometry
             return (
@@ -403,6 +405,8 @@
         } else { // 'enclose'
           return my._StickerList.filter((Sticker:SNS_Sticker) => {
             if (! Sticker.isVisible || Sticker.isLocked) { return false }
+// @ts-ignore TS2339 strange: why does TS not recognize "isSelectable"?
+            if ((Mode === 'run') && ! Sticker.isSelectable) { return false }
 
             const { x,y, Width,Height } = Sticker.Geometry
             return (
@@ -684,6 +688,7 @@
             neverFrom:    '.notBuiltinDraggable',
             Threshold:    4,
             onDragStarted:(x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
+              my._shapedStickers = [Sticker]
               initialGeometry.set(Sticker,Sticker.Geometry)
               changeGeometriesBy([Sticker],'c', dx,dy, [initialGeometry.get(Sticker) as SNS_Geometry])
             },
@@ -695,12 +700,14 @@
               if (! initialGeometry.has(Sticker)) { return }
               changeGeometriesBy([Sticker],'c', dx,dy, [initialGeometry.get(Sticker) as SNS_Geometry])
               initialGeometry.delete(Sticker)
+              my._shapedStickers = []
             },
             onDragCancelled:(x:number,y:number, dx:number,dy:number) => {
               if (initialGeometry.has(Sticker)) {
                 changeGeometriesTo([Sticker],[initialGeometry.get(Sticker) as SNS_Geometry])
               }
               initialGeometry.delete(Sticker)
+              my._shapedStickers = []
             }
           }))
         }
