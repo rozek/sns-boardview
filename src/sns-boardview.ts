@@ -217,7 +217,7 @@
 
   /**** rerender ****/
 
-    public rerender ():void {
+    public rerender (Sticker?:SNS_Sticker):void {
 // @ts-ignore TS2339 "Value" is a valid property
       (this as Component).setState({ Value:(this as Component).state.Value + 1 })
     }
