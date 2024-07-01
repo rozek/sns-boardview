@@ -46,7 +46,12 @@
     background:none; border:none; border-radius:0px; outline:none;
   }
 
-/**** Error Indicator ****/
+/**** "brokenSticker" and Error Indicator ****/
+
+  .SNS.brokenSticker {
+    overflow:hidden;
+    border:dotted 1px orange; background:rgba(255,0,0,0.1);
+  }
 
   .SNS.ErrorIndicator {
     overflow:hidden;
