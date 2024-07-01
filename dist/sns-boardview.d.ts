@@ -28,6 +28,7 @@ export type SNS_Geometry = {
 };
 export declare class SNS_BoardView extends Component {
     private _Board;
+    private _Mode;
     private _StickerList;
     private _pointedSticker;
     private _selectedStickers;
