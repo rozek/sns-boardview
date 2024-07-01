@@ -3,6 +3,7 @@
 *                BoardView for "Shareable Note Stickers" (SNS)                 *
 *                                                                              *
 *******************************************************************************/
+import { SNS_Sticker } from 'shareable-note-stickers';
 import { Component } from 'htm/preact';
 /**** make some existing types indexable ****/
 interface Indexable {
@@ -52,7 +53,7 @@ export declare class SNS_BoardView extends Component {
     componentDidMount(): void;
     componentWillUnmount(): void;
     /**** rerender ****/
-    rerender(): void;
+    rerender(Sticker?: SNS_Sticker): void;
     /**** render ****/
     render(PropSet: Indexable): any;
 }
