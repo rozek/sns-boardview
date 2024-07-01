@@ -162,6 +162,7 @@
 
   export class SNS_BoardView extends Component {
     private _Board:SNS_Board|undefined
+    private _Mode:'touch'|'enclose' = 'enclose'
 
     private _StickerList:SNS_Sticker[] = []
     private _pointedSticker:SNS_Sticker|undefined
@@ -272,7 +273,7 @@
       allowFunction       ('deselection callback',onStickerDeselected)
       allowTextline  ('selection frame CSS style',SelectionFrameStyle)
       allowText     ('selection handle CSS style',SelectionHandleStyle)
-      allowOneOf          ('lasso selection mode',LassoMode, ['touch','contain'])
+      allowOneOf          ('lasso selection mode',LassoMode, ['touch','enclose'])
       allowFunction   ('geometry change callback',onGeometryChange)
       allowBoolean           ('"SnapToGrid" mode',SnapToGrid)
       allowCardinal                 ('grid width',GridWidth)
@@ -287,7 +288,7 @@
       if (selectedStickers     == null) { selectedStickers      = [] }
 //    if (SelectionFrameStyle  == null) { SelectionFrameStyle   = 'dotted 2px orangered' }
       if (SelectionHandleStyle == null) { SelectionHandleStyle  = 'background:orangered; border:solid 1px darkgray' }
-      if (LassoMode            == null) { LassoMode             = 'contain' }
+      if (LassoMode            == null) { LassoMode             = 'enclose' }
       if (SnapToGrid           == null) { SnapToGrid            = false }
       if (GridWidth            == null) { GridWidth             = 10 }
       if (GridHeight           == null) { GridHeight            = 10 }
@@ -310,6 +311,8 @@
       if (selectedStickers.length > SelectionLimit) {
         selectStickers(selectedStickers.slice(0,SelectionLimit))
       }
+
+     my._Mode = Mode
 
       my._StickerList      = StickerList
       my._selectedStickers = selectedStickers   // needed for dragging & shaping
@@ -399,7 +402,7 @@
           return my._StickerList.filter((Sticker:SNS_Sticker) => {
             if (! Sticker.isVisible || Sticker.isLocked) { return false }
 // @ts-ignore TS2339 strange: why does TS not recognize "isSelectable"?
-            if ((Mode === 'run') && ! Sticker.isSelectable) { return false }
+            if ((my._Mode === 'run') && ! Sticker.isSelectable) { return false }
 
             const { x,y, Width,Height } = Sticker.Geometry
             return (
@@ -411,7 +414,7 @@
           return my._StickerList.filter((Sticker:SNS_Sticker) => {
             if (! Sticker.isVisible || Sticker.isLocked) { return false }
 // @ts-ignore TS2339 strange: why does TS not recognize "isSelectable"?
-            if ((Mode === 'run') && ! Sticker.isSelectable) { return false }
+            if ((my._Mode === 'run') && ! Sticker.isSelectable) { return false }
 
             const { x,y, Width,Height } = Sticker.Geometry
             return (
