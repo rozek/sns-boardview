@@ -691,11 +691,12 @@
       function builtinDraggingFor (Sticker:SNS_Sticker):Function {
         let Recognizer = DragRecognizer.get(Sticker)
         if (Recognizer == null) {
-          DragRecognizer.set(Sticker, Recognizer = DragRecognizerFor(Sticker, {
+          DragRecognizer.set(Sticker, Recognizer = DragClickRecognizerFor(Sticker, {
             onlyFrom:     '.builtinDraggable',
             neverFrom:    '.notBuiltinDraggable',
             Threshold:    4,
             onDragStarted:(x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
+              selectStickers([Sticker])          // auto-selection upon dragging
               my._shapedStickers = [Sticker]
               initialGeometry.set(Sticker,Sticker.Geometry)
               changeGeometriesBy([Sticker],'c', dx,dy, [initialGeometry.get(Sticker) as SNS_Geometry])
@@ -708,14 +709,18 @@
               if (! initialGeometry.has(Sticker)) { return }
               changeGeometriesBy([Sticker],'c', dx,dy, [initialGeometry.get(Sticker) as SNS_Geometry])
               initialGeometry.delete(Sticker)
-              my._shapedStickers = []
+              my._shapedStickers = undefined
             },
             onDragCancelled:(x:number,y:number, dx:number,dy:number) => {
               if (initialGeometry.has(Sticker)) {
                 changeGeometriesTo([Sticker],[initialGeometry.get(Sticker) as SNS_Geometry])
               }
               initialGeometry.delete(Sticker)
-              my._shapedStickers = []
+              my._shapedStickers = undefined
+            },
+            onClicked:(x:number,y:number, Event:PointerEvent) => {
+              my._shapedStickers = undefined
+              if (Event.button === 0) { selectStickers([Sticker]) }
             }
           }))
         }
