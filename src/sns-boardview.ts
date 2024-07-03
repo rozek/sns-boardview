@@ -373,7 +373,7 @@
       }
 
       function StickerIsSelected (Sticker:SNS_Sticker):boolean {
-        return (selectedStickers.indexOf(Sticker) >= 0)
+        return (my._selectedStickers.indexOf(Sticker) >= 0)
       }
 
     /**** Lasso Selection ****/
@@ -637,7 +637,7 @@
 
     /**** handleStickerEvent ****/
 
-      const handleStickerEvent = (Event:PointerEvent, Sticker:SNS_Sticker) => {
+      function handleStickerEvent (Event:PointerEvent, Sticker:SNS_Sticker):void {
         my._ShapeMode      = 'c'
         my._pointedSticker = Sticker
         StickerRecognizer(Event)
@@ -670,7 +670,7 @@
         }
       })
 
-      const handleShapeEvent = (Event:PointerEvent, Mode:string) => {
+      function handleShapeEvent (Event:PointerEvent, Mode:string):void {
         my._ShapeMode = Mode
         ShapeHandleRecognizer(Event)
       }
