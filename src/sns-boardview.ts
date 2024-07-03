@@ -452,7 +452,7 @@
         neverFrom:    '.SNS.Sticker.selectable,.SNS.Sticker.selectable *',
         Threshold:    4,
         onDragStarted:(x:number,y:number, dx:number,dy:number) => {
-          my._SelectionBeforeLasso = selectedStickers.slice()
+          my._SelectionBeforeLasso = my._selectedStickers.slice()
 
 // @ts-ignore TS2345 type casting is ok here
           ;({ left:x,top:y } = fromDocumentTo('local',{ left:x,top:y },(my as Component).base))
