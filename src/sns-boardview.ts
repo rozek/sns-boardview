@@ -14,7 +14,7 @@
   } from 'javascript-interface-library'
 
   import {
-    SNS_Board, SNS_Sticker,
+    SNS_Board, SNS_Sticker, SNS_Dialog,
     ValueIsSticker,
     allowBoard,
     CSSStyleOfVisual,
@@ -137,6 +137,14 @@
     white-space:nowrap;
   }
 
+/**** custom Dialogs ****/
+
+  .PUX.Dialog > .ContentPane {
+    position:absolute; left:0px; top:30px; right:0px; bottom:0px;
+  }
+  .PUX.ResizableDialog > .ContentPane {
+    position:absolute; left:0px; top:30px; right:0px; bottom:10px;
+  }
 `
   document.head.appendChild(Stylesheet)
 
@@ -229,6 +237,7 @@
       const my = this
 
       let {
+        PUX,
         Classes, Board, StickerList, Placeholder, Mode,
         SelectionLimit, selectedStickers,
         onSelectionChange, onStickerSelected, onStickerDeselected,
@@ -890,6 +899,12 @@
         }
         ${horizontalGuides()}
         ${verticalGuides()}
+        ${Board == null
+          ? ''
+          : Board.DialogList.map((Dialog:SNS_Dialog) =>
+              html`<${SNS_DialogView} key=${Dialog.Id} PUX=${PUX} Board=${Board} Dialog=${Dialog}/>`
+            )
+        }
       </div>`
     }
   }
@@ -979,6 +994,156 @@
         onPointerDown=${onPointerEvent} onPointerMove=${onPointerEvent}
         onPointerUp=${onPointerEvent} onPointerCancel=${onPointerEvent}
       />`
+    }
+  }
+
+//------------------------------------------------------------------------------
+//--                              SNS_DialogView                              --
+//------------------------------------------------------------------------------
+
+  class SNS_DialogView extends Component {
+    private _DragRecognizer:Function|undefined = undefined
+    private _Dialog:Indexable                  = {}
+    private _DragOffset:Indexable              = {}
+
+    public state:Indexable = { Value:0 }
+
+    public rerender () {
+      (this as Component).setState({ Value:this.state.Value+1 })
+    }
+
+    public render (PropSet:Indexable):any {
+      const { PUX, Board, Dialog } = PropSet
+
+      let {
+        Id, Name, Title, isResizable, x, y, Width, Height,
+        minWidth, maxWidth, minHeight, maxHeight,
+        Renderer, onClose
+      } = Dialog
+
+      Width = Math.max(minWidth,Width)
+      if (maxWidth != null) { Width = Math.min(Width,maxWidth) }
+
+      Height = Math.max(minHeight,Height)
+      if (maxHeight != null) { Height = Math.min(Height,maxHeight) }
+
+      if (x == -Number.MAX_SAFE_INTEGER) { x = Math.max(0,(window.innerWidth-Width)/2) }
+      if (y == -Number.MAX_SAFE_INTEGER) { y = Math.max(0,(window.innerHeight-Height)/2) }
+
+      x = Math.min(x,window.innerWidth-40)
+      y = Math.max(0,Math.min(y,window.innerHeight-30))
+
+      const my = this, me = this; my._Dialog = { x,y, Width,Height }
+
+      const handleDrag = (x:number,y:number, dx:number,dy:number) => {
+        if (Dialog._DragMode === 'drag') {
+          moveDialog(dx,dy)
+        } else {
+          resizeDialog(dx,dy)
+        }
+        Board.bringDialogToFront(Dialog.Name)
+        Board.rerender()
+      }
+
+      const moveDialog = (dx:number,dy:number) => {
+        Board.positionDialogAt(
+          Dialog.Name, my._DragOffset.x + dx,my._DragOffset.y + dy
+        )
+      }
+
+      const resizeDialog = (dx:number,dy:number) => {
+        let newWidth:number = my._Dialog.Width
+        switch (Dialog._DragMode) {
+          case 'resize-sw':
+            newWidth =  Math.max(minWidth,Math.min(my._DragOffset.Width-dx,maxWidth || Infinity))
+              dx = newWidth-my._DragOffset.Width
+            Board.positionDialogAt(
+              Dialog.Name, my._DragOffset.x-dx,my._DragOffset.y
+            )
+            newWidth = my._DragOffset.Width+dx
+            break
+          case 'resize-se':
+            newWidth = Math.max(minWidth,Math.min(my._DragOffset.Width+dx,maxWidth || Infinity))
+        }
+        let newHeight = Math.max(minHeight,Math.min(my._DragOffset.Height+dy,maxHeight || Infinity))
+        Board.sizeDialogTo(Dialog.Name, newWidth,newHeight)
+      }
+
+      let DragRecognizer = my._DragRecognizer
+      if (DragRecognizer == null) {
+        DragRecognizer = my._DragRecognizer = DragRecognizerFor(me, {
+          onlyFrom:       '.Titlebar,.leftResizer,.middleResizer,.rightResizer',
+          neverFrom:      '.CloseButton',
+          Threshold:      4,
+          onDragStarted:  (x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
+            let ClassList = (Event.target as HTMLElement).classList; Dialog._DragMode = undefined
+            switch (true) {
+              case ClassList.contains('leftResizer'):   Dialog._DragMode = 'resize-sw'; break
+              case ClassList.contains('middleResizer'): Dialog._DragMode = 'resize-s';  break
+              case ClassList.contains('rightResizer'):  Dialog._DragMode = 'resize-se'; break
+              default:                                  Dialog._DragMode = 'drag'
+            }
+
+            my._DragOffset = { ...my._Dialog }
+            handleDrag(x,y, dx,dy)
+          },
+          onDragContinued: handleDrag,
+          onDragFinished:  handleDrag,
+          onDragCancelled: handleDrag,
+        })
+      }
+
+      function onCloseClick (Event:PointerEvent) {
+        Event.stopImmediatePropagation()
+        Event.preventDefault()
+
+        Board.closeDialog(Dialog.Name)
+        if (onClose != null) { onClose(Name) }
+      }
+
+
+
+      const CSSGeometry = (
+        `left:${x}px; top:${y}px; width:${Width}px; height:${Height}px; right:auto; bottom:auto;`
+      )
+
+      let Content
+      try {
+        Content = Renderer()
+      } catch (Signal) {
+        console.error('Dialog rendering failed',Signal)
+        Content = html`<div>(Dialog rendering failed)</div>`
+      }
+
+      return html`<div class="PUX ${isResizable ? 'Resizable' : ''}Dialog" id=${Id} style="
+        position:fixed; ${CSSGeometry}
+      ">
+        <div class="ContentPane">${Content}</div>
+
+        <div class="Titlebar"
+          onPointerDown=${DragRecognizer} onPointerUp=${DragRecognizer}
+          onPointerMove=${DragRecognizer} onPointerCancel=${DragRecognizer}
+        >
+          <div class="Title">${Title}</div>
+          <img class="CloseButton" src="${PUX._ImageFolder}/xmark.png"
+            onClick=${onCloseClick}/>
+        </div>
+
+        ${isResizable ? html`
+          <div class="leftResizer"
+            onPointerDown=${DragRecognizer} onPointerUp=${DragRecognizer}
+            onPointerMove=${DragRecognizer} onPointerCancel=${DragRecognizer}
+          />
+          <div class="middleResizer"
+            onPointerDown=${DragRecognizer} onPointerUp=${DragRecognizer}
+            onPointerMove=${DragRecognizer} onPointerCancel=${DragRecognizer}
+          />
+          <div class="rightResizer"
+            onPointerDown=${DragRecognizer} onPointerUp=${DragRecognizer}
+            onPointerMove=${DragRecognizer} onPointerCancel=${DragRecognizer}
+          />
+        `: ''}
+      </>`
     }
   }
 
