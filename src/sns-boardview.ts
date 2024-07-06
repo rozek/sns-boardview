@@ -46,6 +46,13 @@
     background:none; border:none; border-radius:0px; outline:none;
   }
 
+/**** elements of class "SNS Content" cover their whole container ****/
+
+  .SNS.Content {
+    display:block; position:absolute;
+    left:0px; top:0px; width:100%; height:100%;
+  }
+
 /**** "brokenSticker" and Error Indicator ****/
 
   .SNS.brokenSticker {
