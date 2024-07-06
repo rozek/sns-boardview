@@ -1124,7 +1124,7 @@
 
       return html`<div class="PUX ${isResizable ? 'Resizable' : ''}Dialog" id=${Id} style="
         position:fixed; ${CSSGeometry}
-      ">
+      " onPointerDown=${() => Board.bringDialogToFront(Dialog.Name)}>
         <div class="ContentPane">${Content}</div>
 
         <div class="Titlebar"
