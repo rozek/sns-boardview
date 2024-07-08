@@ -1008,10 +1008,16 @@
 //--                              SNS_DialogView                              --
 //------------------------------------------------------------------------------
 
+  const DefaultGeometry:SNS_Geometry = {
+    x:-Number.MAX_SAFE_INTEGER, Width:320,
+    y:-Number.MAX_SAFE_INTEGER, Height:240
+  }
+
   class SNS_DialogView extends Component {
     private _DragRecognizer:Function|undefined = undefined
-    private _Dialog:Indexable                  = {}
-    private _DragOffset:Indexable              = {}
+    private _Geometry:SNS_Geometry = DefaultGeometry // act., constrained dlg geo
+    private _DragMode:'drag'|'resize-sw'|'resize-s'|'resize-se'|undefined
+    private _DragOffset:SNS_Geometry = DefaultGeometry  // dlg geo at drag start
 
     public state:Indexable = { Value:0 }
 
@@ -1040,10 +1046,10 @@
       x = Math.min(x,window.innerWidth-40)
       y = Math.max(0,Math.min(y,window.innerHeight-30))
 
-      const my = this, me = this; my._Dialog = { x,y, Width,Height }
+      const my = this, me = this; my._Geometry = { x,y, Width,Height }
 
       const handleDrag = (x:number,y:number, dx:number,dy:number) => {
-        if (Dialog._DragMode === 'drag') {
+        if (my._DragMode === 'drag') {
           moveDialog(dx,dy)
         } else {
           resizeDialog(dx,dy)
@@ -1059,8 +1065,8 @@
       }
 
       const resizeDialog = (dx:number,dy:number) => {
-        let newWidth:number = my._Dialog.Width
-        switch (my._Dialog._DragMode) {
+        let newWidth:number = my._DragOffset.Width
+        switch (my._DragMode) {
           case 'resize-sw':
             newWidth =  Math.max(minWidth,Math.min(my._DragOffset.Width-dx,maxWidth || Infinity))
               dx = newWidth-my._DragOffset.Width
@@ -1083,15 +1089,15 @@
           neverFrom:      '.CloseButton',
           Threshold:      4,
           onDragStarted:  (x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
-            let ClassList = (Event.target as HTMLElement).classList; Dialog._DragMode = undefined
+            let ClassList = (Event.target as HTMLElement).classList; my._DragMode = undefined
             switch (true) {
-              case ClassList.contains('leftResizer'):   Dialog._DragMode = 'resize-sw'; break
-              case ClassList.contains('middleResizer'): Dialog._DragMode = 'resize-s';  break
-              case ClassList.contains('rightResizer'):  Dialog._DragMode = 'resize-se'; break
-              default:                                  Dialog._DragMode = 'drag'
+              case ClassList.contains('leftResizer'):   my._DragMode = 'resize-sw'; break
+              case ClassList.contains('middleResizer'): my._DragMode = 'resize-s';  break
+              case ClassList.contains('rightResizer'):  my._DragMode = 'resize-se'; break
+              default:                                  my._DragMode = 'drag'
             }
 
-            my._DragOffset = { ...my._Dialog }
+            my._DragOffset = { ...my._Geometry }
             handleDrag(x,y, dx,dy)
           },
           onDragContinued: handleDrag,
