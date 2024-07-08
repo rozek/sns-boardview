@@ -1060,7 +1060,7 @@
 
       const resizeDialog = (dx:number,dy:number) => {
         let newWidth:number = my._Dialog.Width
-        switch (Dialog._DragMode) {
+        switch (my._Dialog._DragMode) {
           case 'resize-sw':
             newWidth =  Math.max(minWidth,Math.min(my._DragOffset.Width-dx,maxWidth || Infinity))
               dx = newWidth-my._DragOffset.Width
@@ -1124,7 +1124,7 @@
 
       return html`<div class="PUX ${isResizable ? 'Resizable' : ''}Dialog" id=${Id} style="
         position:fixed; ${CSSGeometry}
-      " onPointerDown=${() => Board.bringDialogToFront(Dialog.Name)}>
+      ">
         <div class="ContentPane">${Content}</div>
 
         <div class="Titlebar"
