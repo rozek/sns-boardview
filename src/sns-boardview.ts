@@ -441,9 +441,13 @@
         }
       }
 
-      function dragLassoTo (x:SNS_Location,y:SNS_Location):void {
+      function dragLassoTo (
+        x:SNS_Location,y:SNS_Location, additiveSelection:boolean
+      ):void {
         my._LassoEnd = { x,y }
-        selectStickers(my._SelectionBeforeLasso, StickersCaughtByLasso())
+        selectStickers(
+          additiveSelection ? my._SelectionBeforeLasso : [], StickersCaughtByLasso()
+        )
       }
 
       function applyLasso ():void {
@@ -467,24 +471,30 @@
         onlyFrom:     '.SNS.BoardView,.SNS.Sticker,.SNS.Sticker *',
         neverFrom:    '.SNS.Sticker.selectable,.SNS.Sticker.selectable *',
         Threshold:    4,
-        onDragStarted:(x:number,y:number, dx:number,dy:number) => {
+        onDragStarted:(x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
           my._SelectionBeforeLasso = my._selectedStickers.slice()
 
 // @ts-ignore TS2345 type casting is ok here
           ;({ left:x,top:y } = fromDocumentTo('local',{ left:x,top:y },(my as Component).base))
 
           my._LassoStart = { x,y }
-          dragLassoTo(x,y)
+          dragLassoTo(x,y, Event.shiftKey || Event.metaKey)
           my.rerender()
         },
-        onDragContinued:(x:number,y:number, dx:number,dy:number) => {
+        onDragContinued:(x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
+          dragLassoTo(
 // @ts-ignore TS2532 my._LassoStart is _not_ undefined
-          dragLassoTo(my._LassoStart.x+dx,my._LassoStart.y+dy)
+            my._LassoStart.x+dx,my._LassoStart.y+dy,
+            Event.shiftKey || Event.metaKey
+          )
           my.rerender()
         },
-        onDragFinished: (x:number,y:number, dx:number,dy:number) => {
+        onDragFinished: (x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
+          dragLassoTo(
 // @ts-ignore TS2532 my._LassoStart is _not_ undefined
-          dragLassoTo(my._LassoStart.x+dx,my._LassoStart.y+dy)
+            my._LassoStart.x+dx,my._LassoStart.y+dy,
+            Event.shiftKey || Event.metaKey
+          )
           applyLasso()
           my.rerender()
         },
