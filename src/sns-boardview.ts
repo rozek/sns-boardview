@@ -695,14 +695,14 @@
 
       function builtinSelectionFor (Sticker:SNS_Sticker):Function {
         return function (Event:PointerEvent):void {
-          if (Event.button === 0) { selectStickers([Sticker]) }
+          my._pointedSticker = Sticker
+          onStickerClick(0,0, Event)
         }
       }
 
     /**** builtinDraggingFor ****/
 
       const DragRecognizer:WeakMap<SNS_Sticker,Function> = new WeakMap()
-      const initialGeometry:WeakMap<SNS_Sticker,SNS_Geometry> = new WeakMap()
 
       function builtinDraggingFor (Sticker:SNS_Sticker):Function {
         let Recognizer = DragRecognizer.get(Sticker)
@@ -712,31 +712,37 @@
             neverFrom:    '.notBuiltinDraggable',
             Threshold:    4,
             onDragStarted:(x:number,y:number, dx:number,dy:number, Event:PointerEvent) => {
-              selectStickers([Sticker])          // auto-selection upon dragging
-              my._shapedStickers = [Sticker]
-              initialGeometry.set(Sticker,Sticker.Geometry)
-              changeGeometriesBy([Sticker],'c', dx,dy, [initialGeometry.get(Sticker) as SNS_Geometry])
+              my._pointedSticker = Sticker
+              if (! StickerIsSelected(my._pointedSticker as SNS_Sticker)) {
+                if (Event.shiftKey || Event.metaKey) {  // additive/subtractive sel.
+                  selectStickers([my._pointedSticker as SNS_Sticker],my._selectedStickers)
+                } else {
+                  selectStickers([my._pointedSticker as SNS_Sticker])
+                }
+              }
+
+              my._shapedStickers    = my._selectedStickers
+              my._initialGeometries = my._selectedStickers.map(
+                (Sticker:SNS_Sticker) => Sticker.Geometry
+              )
+              changeGeometriesBy(my._shapedStickers,'c', dx,dy)
             },
             onDragContinued:(x:number,y:number, dx:number,dy:number) => {
-              if (! initialGeometry.has(Sticker)) { return }
-              changeGeometriesBy([Sticker],'c', dx,dy, [initialGeometry.get(Sticker) as SNS_Geometry])
+              if (my._shapedStickers == null) { return }
+              changeGeometriesBy(my._shapedStickers,'c', dx,dy)
             },
             onDragFinished: (x:number,y:number, dx:number,dy:number) => {
-              if (! initialGeometry.has(Sticker)) { return }
-              changeGeometriesBy([Sticker],'c', dx,dy, [initialGeometry.get(Sticker) as SNS_Geometry])
-              initialGeometry.delete(Sticker)
-              my._shapedStickers = undefined
+              if (my._shapedStickers == null) { return }
+
+              changeGeometriesBy(my._shapedStickers,'c', dx,dy)
+              finishDraggingAndShaping()
             },
             onDragCancelled:(x:number,y:number, dx:number,dy:number) => {
-              if (initialGeometry.has(Sticker)) {
-                changeGeometriesTo([Sticker],[initialGeometry.get(Sticker) as SNS_Geometry])
-              }
-              initialGeometry.delete(Sticker)
-              my._shapedStickers = undefined
+              abortDraggingAndShaping()
             },
             onClicked:(x:number,y:number, Event:PointerEvent) => {
-              my._shapedStickers = undefined
-              if (Event.button === 0) { selectStickers([Sticker]) }
+              my._pointedSticker = Sticker
+              onStickerClick(0,0, Event)
             }
           }))
         }
@@ -1027,6 +1033,7 @@
 
     public render (PropSet:Indexable):any {
       const { PUX, Board, Dialog } = PropSet
+      if (Dialog.Visibility == false) { return '' }
 
       let {
         Id, Name, Title, isResizable, x, y, Width, Height,
