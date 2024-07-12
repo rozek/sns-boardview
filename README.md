@@ -6,7 +6,7 @@ a "preact" editor component for "shareable-note-stickers"
 
 ## Overview ##
 
-While [shareable-note-stickers](https://github.com/rozek/shareable-note-stickers) implements the underlying data model for a shareable hierarchical collection of "boards" containing scriptable widgets (called "stickers"), this module implements a [preact](https://preactjs.com/) component that displays a board of stickers and provides all methods to visually select and edit them.
+While [shareable-note-stickers](https://github.com/rozek/shareable-note-stickers) implements the underlying data model for a shareable hierarchical collection of "boards" containing scriptable widgets (called "stickers"), this module implements a [preact](https://preactjs.com/) component that displays one of these boards of stickers and provides all methods to visually select and edit them.
 
 While the data model is _principally_ shareable, you will have to add a "sharing adapter" such as the [sns-collabs-adapter](https://github.com/rozek/sns-collabs-adapter) to provide that feature.
 
