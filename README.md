@@ -12,7 +12,29 @@ While the data model is _principally_ shareable, you will have to add a "sharing
 
 Finally, to get a real application, you'll have to combine both modules and add a proper user interface - similar to [NoteStickers](https://github.com/rozek/note-stickers).
 
-Because of this modularity, it is not too difficult to use a different sharing framework (such as [Y.js](https://github.com/yjs/yjs) or [automerge](https://github.com/automerge/automerge)), modify the user interface according to your personal needs or even develop a headless tool that analyzes and/or changes the shared data
+Because of this modularity, it is not too difficult to use a different sharing framework (such as [Y.js](https://github.com/yjs/yjs) or [automerge](https://github.com/automerge/automerge)), modify the user interface according to your personal needs or even develop a headless tool that analyzes and/or changes the shared data without user intervention.
+
+## Usage ##
+
+"sns-boardview" is intended for being used as a module within a "host application". In order to use it, simply import the `SNS_BoardView` class:
+
+```
+  import { SNS_BoardView } from 'sns-boardview'
+```
+
+Then, as part of your user interface, instantiate the `SNS_BoardView` like any other preact component:
+
+```
+  html`<${SNS_BoardView}
+    PUX=${...}
+    Mode=${...} Board=${...} StickerList=${...}
+    LassoMode="..." selectedStickers=${...}
+    onSelectionChange=${(selectedStickers:SNS_Sticker[]) => {...}}
+    onGeometryChange=${(StickerList:SNS_Sticker[],GeometryList:SNS_Geometry[]) => {...}}
+    SnapToGrid=${...} GridWidth=${...} GridHeight=${...}
+  />`
+```
+
 
 
 
