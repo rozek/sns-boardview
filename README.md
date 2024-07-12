@@ -39,24 +39,26 @@ Then, as part of your user interface, instantiate the `SNS_BoardView` like any o
 
 `SNS_BoardView` handles the following Attributes:
 
-* `PUX`
-* `Classes`
-* `Board`
-* `StickerList`
-* `Placeholder`
-* `Mode`
-* `SelectionLimit`
-* `selectedStickers`
-* `onSelectionChange`
-* `onStickerSelected`
-* `onStickerDeselected`
-* `SelectionFrameStyle`
-* `SelectionHandleStyle`
-* `LassoMode`
-* `onGeometryChange`
-* `SnapToGrid`
-* `GridWidth`
-* `GridHeight
+* `PUX` - specifies a previously created [ProtoUX](https://github.com/rozek/protoux) instance
+* `Classes` - specifies an optional string with additional CSS classes that should be used to style this `SNS_BoardView`
+* `Board` - specifies the `SNS_Board` that should be shown (and may be `null` if there is no `SNS_Project` or the current `SNS_Project` does not yet contain any boards)
+* `StickerList` - specifies the actual list of stickers that should be shown (usually, its just the `Board.StickerList`)
+* `Placeholder` - specifies a text that is shown when `Board` is not defined (or `null`)
+* `Mode` - in `edit` mode, all stickers can be principally selected and layouted (unless they are `locked` or not `visible`). In 'run' mode, only the those stickers can be selected and layouted that support `builtinSelection` or `builtinDragging`
+* `SelectionLimit` - `SNS_BoardView` allows multiple stickers to be selected simultaneously. If you want to limit the number of selected stickers, just provide the limit here
+* `selectedStickers` - specifies a callback with the signature `selectedStickers:SNS_Sticker[]` that is invoked (with the new list of selected stickers) whenever the list of selected stickers has changed
+* `onSelectionChange` - specifies a callback with the signature `Sticker:SNS_Sticker` that is invoked whenever a sticker was deselected
+* `onStickerSelected` - specifies a callback with the signature `Sticker:SNS_Sticker` that is invoked whenever a sticker was selected
+* `onStickerDeselected` - specifies a callback with the signature `Sticker:SNS_Sticker` that is invoked whenever a sticker was deselected
+* `SelectionFrameStyle` - specifies CSS settings to style selection frames (default is `dotted 2px orangered`)
+* `SelectionHandleStyle` - specifies CSS settings to style selection handles (default is `background:orangered; border:solid 1px darkgray`)
+* `LassoMode` - when set to `enclose` the selection lasso has to fully enclose a sticker in order to select it, when set to `touch`, the lasso only has to "touch" it
+* `onGeometryChange` - specifies a callback with the signature `StickerList:SNS_Sticker[], GeometryList:SNS_Geometry[]` that is invoked whenever the `selectedStickers` where moved or sized by the `SNS_BoardView`
+* `SnapToGrid` - when set to `true`, `SNS_BoardView` constrains the position and size of visually layouted stickers to multiples of `GridWidth` in horizontal and multiples of `GridHeight` in vertical direction
+* `GridWidth` - specifies the horizontal distance between adjacent grid points while `SnapToGrid` is `true`
+* `GridHeight` - specifies the vertical distance between adjacent grid points while `SnapToGrid` is `true`
+
+### Methods ###
 
 ## License ##
 
