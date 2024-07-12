@@ -35,10 +35,28 @@ Then, as part of your user interface, instantiate the `SNS_BoardView` like any o
   />`
 ```
 
+### Attributes ###
 
+`SNS_BoardView` handles the following Attributes:
 
-
-(work in progress)
+* `PUX`
+* `Classes`
+* `Board`
+* `StickerList`
+* `Placeholder`
+* `Mode`
+* `SelectionLimit`
+* `selectedStickers`
+* `onSelectionChange`
+* `onStickerSelected`
+* `onStickerDeselected`
+* `SelectionFrameStyle`
+* `SelectionHandleStyle`
+* `LassoMode`
+* `onGeometryChange`
+* `SnapToGrid`
+* `GridWidth`
+* `GridHeight
 
 ## License ##
 
