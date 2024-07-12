@@ -37,7 +37,7 @@ Then, as part of your user interface, instantiate the `SNS_BoardView` like any o
 
 ### Attributes ###
 
-`SNS_BoardView` handles the following Attributes:
+`SNS_BoardView` handles the following attributes:
 
 * `PUX` - specifies a previously created [ProtoUX](https://github.com/rozek/protoux) instance
 * `Classes` - specifies an optional string with additional CSS classes that should be used to style this `SNS_BoardView`
@@ -59,6 +59,10 @@ Then, as part of your user interface, instantiate the `SNS_BoardView` like any o
 * `GridHeight` - specifies the vertical distance between adjacent grid points while `SnapToGrid` is `true`
 
 ### Methods ###
+
+Actually, `SNS_BoardView` offers only one meaningful method:
+
+* `rerender ()` - call this method whenever the specified `Board`, its `StickerList` or any of its contents have changed. [preact](https://preactjs.com/) will then take care that only those HTML elements will be rerendered that need to.
 
 ## License ##
 
