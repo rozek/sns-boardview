@@ -10,9 +10,9 @@ While [shareable-note-stickers](https://github.com/rozek/shareable-note-stickers
 
 While the data model is _principally_ shareable, you will have to add a "sharing adapter" such as the [sns-collabs-adapter](https://github.com/rozek/sns-collabs-adapter) to actually provide that feature.
 
-Finally, to get a real application, you'll have to combine both modules and add a proper user interface - similar to [NoteStickers](https://github.com/rozek/note-stickers)
+Finally, to get a real application, you'll have to combine both modules and add a proper user interface - similar to [NoteStickers](https://github.com/rozek/note-stickers).
 
-Because of this modularity, it is not to difficult to use a different sharing framework (such as [Y.js](https://github.com/yjs/yjs) or [automerge](https://github.com/automerge/automerge)), modify the user interface according to your personal needs or even develop a headless tool that analyzes and/or changes the shared data
+Because of this modularity, it is not too difficult to use a different sharing framework (such as [Y.js](https://github.com/yjs/yjs) or [automerge](https://github.com/automerge/automerge)), modify the user interface according to your personal needs or even develop a headless tool that analyzes and/or changes the shared data
 
 
 
