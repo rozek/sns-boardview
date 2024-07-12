@@ -19,7 +19,7 @@ Because of this modularity, it is not too difficult to use a different sharing f
 "sns-boardview" is intended for being used as a module within a "host application". In order to use it, simply import the `SNS_BoardView` class:
 
 ```
-  import { SNS_BoardView } from 'sns-boardview'
+  import { SNS_BoardView } from '[sns-boardview](https://rozek.github.io/sns-boardview/dist/sns-boardview.modern.js)'
 ```
 
 Then, as part of your user interface, instantiate the `SNS_BoardView` like any other preact component:
